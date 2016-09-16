@@ -18,11 +18,14 @@ public class Print {
 		
 		System.out.println("This is a text version of the classic board game Mastermind.");
 		
-		System.out.println("The computer will think of a secret code. The code consists of 4");
+		System.out.println("The computer will think of a secret code. The code consists of "
+							+ GameConfiguration.pegNumber);
 		
 		System.out.println("colored pegs.");
 		
-		System.out.println("The pegs MUST be one of six colors: blue, green, orange, purple,");
+		System.out.println("The pegs MUST be one of " +
+							GameConfiguration.colors.length +
+							" colors: blue, green, orange, purple,");
 		
 		System.out.println("red, or yellow. A color may appear more than once in the code. You");
 		
@@ -50,7 +53,9 @@ public class Print {
 		
 		System.out.println("each color as a capital letter.\n");
 		
-		System.out.println("You have 12 guesses to figure out the secret code or you lose the");
+		System.out.println("You have " +
+							GameConfiguration.guessNumber +
+							" guesses to figure out the secret code or you lose the");
 		
 		System.out.print("game.  ");
 	}
