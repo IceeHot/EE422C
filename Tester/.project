@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>UMLClassDiagram.png</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Project%202%20Mastermind/UML%20Diagrams/UMLClassDiagram.png</locationURI>
+		</link>
+		<link>
+			<name>UMLClassDiagram.ucls</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Project%202%20Mastermind/UML%20Diagrams/UMLClassDiagram.ucls</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
