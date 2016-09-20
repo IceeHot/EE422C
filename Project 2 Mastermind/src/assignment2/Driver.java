@@ -1,3 +1,12 @@
+/* 
+ * Driver.java
+ * EE422C Project 2 (Mastermind)
+ * Brent Atchison
+ * bma862
+ * Slip days used: 0
+ * Fall 2016
+ */
+
 package assignment2;
 
 import java.util.Scanner;
@@ -8,6 +17,13 @@ public class Driver {
 
 		/* Create scanner for player input */
 		Scanner scan = new Scanner(System.in);
+		
+		/* Print instructions */
+		Print.printWelcome();
+		
+		/* Check if player is ready */	
+		Print.printReady();	
+		Input.ready(scan);
 		
 		while (true) { 
 			

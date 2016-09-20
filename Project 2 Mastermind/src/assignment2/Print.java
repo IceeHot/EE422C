@@ -12,6 +12,7 @@ package assignment2;
 public class Print {
 	
 	/** Prints welcome message */
+	@SuppressWarnings("unused")
 	public static void printWelcome() {
 		
 		System.out.println("\nWelcome to Mastermind. Here are the rules.\n");
@@ -21,10 +22,14 @@ public class Print {
 		System.out.println("The computer will think of a secret code. The code consists of "
 							+ GameConfiguration.pegNumber);
 		
-		System.out.println("colored pegs.");
+		if (GameConfiguration.pegNumber == 1) {
+			System.out.println("colored peg.");
+		}
+		else {
+			System.out.println("colored pegs.");
+		}
 		
-		System.out.println("The pegs MUST be one of " +
-							GameConfiguration.colors.length +
+		System.out.println("The pegs MUST be one of " + GameConfiguration.colors.length +
 							" colors: blue, green, orange, purple,");
 		
 		System.out.println("red, or yellow. A color may appear more than once in the code. You");
@@ -53,9 +58,14 @@ public class Print {
 		
 		System.out.println("each color as a capital letter.\n");
 		
-		System.out.println("You have " +
-							GameConfiguration.guessNumber +
-							" guesses to figure out the secret code or you lose the");
+		if (GameConfiguration.guessNumber == 1) {
+			System.out.println("You have " + GameConfiguration.guessNumber +
+								" guess to figure out the secret code or you lose the");
+		}
+		else {
+			System.out.println("You have " + GameConfiguration.guessNumber +
+								" guesses to figure out the secret code or you lose the");
+		}
 		
 		System.out.print("game.  ");
 	}
@@ -76,16 +86,16 @@ public class Print {
 	}
 	
 	public static void printCode(String strCode) {
-		System.out.print("(for this example the secret code is\n" + strCode + ")");
+		System.out.print(" (for this example the secret code is\n" + strCode + ")");
 	}
 	
 	/** Prints guesses remaining */
 	public static void printRemGuesses() {
-		if (GameFunctions.remGuesses != 1) {
-			System.out.println("\n\nYou have " + GameFunctions.remGuesses + " guesses left.");
+		if (GameFunctions.remGuesses == 1) {
+			System.out.println("\n\nYou have " + GameFunctions.remGuesses + " guess left.");
 		}
 		else {
-			System.out.println("\n\nYou have " + GameFunctions.remGuesses + " guess left.");
+			System.out.println("\n\nYou have " + GameFunctions.remGuesses + " guesses left.");
 		}
 	}
 	
@@ -168,13 +178,19 @@ public class Print {
 	}
 	
 	/** Player won */
+	@SuppressWarnings("unused")
 	public static void win() {
-		System.out.println(GameConfiguration.pegNumber + " black pegs – You win!!\n");
+		if (GameConfiguration.pegNumber == 1) {
+			System.out.println(GameConfiguration.pegNumber + " black peg – You win!!\n");
+		}
+		else {
+			System.out.println(GameConfiguration.pegNumber + " black pegs – You win!!\n");
+		}
 	}
 	
 	/** Player lost */
 	public static void lose() {
-		System.out.println("(Sorry, you are out of guesses. You lose, boo-hoo.)\n");
+		System.out.println("\n(Sorry, you are out of guesses. You lose, boo-hoo.)\n");
 	}
 	
 	/** Ask for another game */

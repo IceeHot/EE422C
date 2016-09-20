@@ -11,7 +11,7 @@ package assignment2;
 
 import java.util.Scanner;
 
-public class Game extends Driver{
+public class Game{
 	
 	private static boolean testMode;
 	private static Game newGame;
@@ -27,16 +27,11 @@ public class Game extends Driver{
 	/**
 	 * Loop that runs the game
 	 */
-	@SuppressWarnings("static-access")
+	//@SuppressWarnings("static-access")
 	public static void runGame(boolean testMode, Scanner scan) {
 		
-		/* Check test mode, initialize game */
-		if (testMode) {
-			newGame = new Game(true);
-		}
-		else {
-			newGame = new Game(false);
-		}
+		/* Initialize new game */		
+		setNewGame(new Game(testMode));
 		
 		/* Reset variable */
 		GameFunctions.remGuesses = GameConfiguration.guessNumber;
@@ -46,19 +41,12 @@ public class Game extends Driver{
 			GameFunctions.colorLetters[i] = GameConfiguration.colors[i].charAt(0);
 		}
 		
-		/* Print instructions */
-		Print.printWelcome();
-		
-		/* Check if player is ready */	
-		Print.printReady();	
-		Input.ready(scan);
-		
 		/* Generate code */
 		Print.printGenerate();
 		String strCode = SecretCodeGenerator.getInstance().getNewSecretCode();
 		
 		/* Print code if testMode is on */
-		if (newGame.testMode) {
+		if (Game.testMode) {
 			Print.printCode(strCode);
 		}
 		
@@ -94,6 +82,14 @@ public class Game extends Driver{
 			Print.anotherGame();
 			Input.ready(scan);
 		}
+	}
+
+	public static Game getNewGame() {
+		return newGame;
+	}
+
+	public static void setNewGame(Game newGame) {
+		Game.newGame = newGame;
 	}
 
 }

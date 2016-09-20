@@ -67,12 +67,9 @@ public class Input {
 				
 				/* Print guess to console */
 				System.out.print(guess + " -> ");
-	
-				/* Convert to character array */
-				char[] textArray = guess.toCharArray();
 				
 				/* Incorrect input */
-				if ((guess.length() != GameConfiguration.pegNumber) || !searchColors(textArray)) {
+				if ((guess.length() != GameConfiguration.pegNumber) || !searchColors(guess.toCharArray())) {
 					Print.printInvalidGuess();
 					Print.printNextTurn();
 				}
@@ -80,16 +77,16 @@ public class Input {
 				/* Correct input */
 				else {
 					
-					/* Store guess in previous guesses array */
+					/* Store guess in history array */
 					for (int i = 0; i < GameConfiguration.pegNumber; i++) {
-						GameFunctions.prevGuesses[GameConfiguration.guessNumber - GameFunctions.remGuesses][i] = textArray[i];
+						GameFunctions.prevGuesses[GameConfiguration.guessNumber - GameFunctions.remGuesses][i] = guess.toCharArray()[i];
 					}
 					
 					/* Print guess */
 					System.out.print("Result:  ");
 					
 					/* Return guess */
-					return textArray;
+					return guess.toCharArray();
 				}
 			}
 		}
