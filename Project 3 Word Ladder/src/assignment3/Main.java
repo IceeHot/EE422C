@@ -23,17 +23,31 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		Scanner kb;	// input Scanner for commands
-		PrintStream ps;	// output file
-		// If arguments are specified, read/write from/to files instead of Std IO.
+		/* Input scanner for commands */
+		Scanner kb;
+		
+		/* Output file */
+		PrintStream ps;
+		
+		/* If arguments are specified, read/write from/to files instead of console */
 		if (args.length != 0) {
+			
 			kb = new Scanner(new File(args[0]));
 			ps = new PrintStream(new File(args[1]));
-			System.setOut(ps);			// redirect output to ps
+			
+			/* Set output to PrintStream */
+			System.setOut(ps);
+			
 		} else {
-			kb = new Scanner(System.in);// default from Stdin
-			ps = System.out;			// default to Stdout
+			
+			/* Default console input */
+			kb = new Scanner(System.in);
+			
+			/* Default console output */
+			ps = System.out;
+			
 		}
+		
 		initialize();
 		
 		// TODO methods to read in words, output ladder
@@ -52,6 +66,14 @@ public class Main {
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
 		// TO DO
+		
+		/* Input from Keyboard */
+		String text = keyboard.nextLine();
+		
+		/* Command is /quit */
+		if (text.equals("/quit")) { return null; }
+		
+		
 		return null;
 	}
 	
@@ -75,7 +97,7 @@ public class Main {
 		return null; // replace this line later with real return
 	}
     
-	public static Set<String>  makeDictionary () {
+	public static Set<String> makeDictionary() {
 		Set<String> words = new HashSet<String>();
 		Scanner infile = null;
 		try {
