@@ -74,16 +74,6 @@ public class Main {
 		}
 	}
 	
-	public static void initialize() {
-		// initialize your static variables or constants here.
-		// We will call this method before running our JUNIT tests.  So call it 
-		// only once at the start of main.
-		words = new ArrayList<String>();
-		BFS = new ArrayList<String>();
-		DFS = new ArrayList<String>();
-		rungs = 0;
-	}
-	
 	/**
 	 * @param keyboard Scanner connected to System.in
 	 * @return ArrayList of 2 Strings containing start word and end word. 
@@ -166,6 +156,16 @@ public class Main {
 				System.out.println(words.get(i).toLowerCase());
 			}
 		}
+	}
+	
+	public static void initialize() {
+		// initialize your static variables or constants here.
+		// We will call this method before running our JUNIT tests.  So call it 
+		// only once at the start of main.
+		words = new ArrayList<String>();
+		BFS = new ArrayList<String>();
+		DFS = new ArrayList<String>();
+		rungs = 0;
 	}
 
 	/**
