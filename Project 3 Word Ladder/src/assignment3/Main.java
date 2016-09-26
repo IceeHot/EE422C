@@ -19,10 +19,11 @@ import java.io.*;
 
 public class Main {
 	
-	// static variables and constants only here.
-	public static ArrayList<String> words = new ArrayList<String>();
-	public static ArrayList<String> BFS = new ArrayList<String>();
-	public static ArrayList<String> DFS = new ArrayList<String>();
+	/* Static variables */
+	public static ArrayList<String> words;
+	public static ArrayList<String> BFS;
+	public static ArrayList<String> DFS;
+	public static int rungs;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -51,26 +52,36 @@ public class Main {
 			
 		}
 		
-		initialize();
-		
-		parse(kb);
-		
-		/* Two input words are the same */
-		if (words.get(0).equals(words.get(1))) { printLadder(words); }
+		while (true) {
 
-		//System.out.println("Word 1 is: " + words.get(0));
-		//System.out.println("Word 2 is: " + words.get(1));
-
-		BFS = getWordLadderBFS(words.get(0), words.get(1));
-		DFS = getWordLadderDFS(words.get(0), words.get(1));
-		
-		// TODO methods to read in words, output ladder
+			/* Reset variables */
+			initialize();
+			
+			/* Take keyboard input */
+			parse(kb);
+			
+			/* Two input words are the same */
+			if (words.get(0).equals(words.get(1))) { printLadder(words); }
+			
+			/* Two input words differ in length */
+			else if (words.get(0).length() != words.get(1).length()) { printLadder(null); }
+	
+			/* Call and print ladder methods */
+			else {
+				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+			}
+		}
 	}
 	
 	public static void initialize() {
 		// initialize your static variables or constants here.
 		// We will call this method before running our JUNIT tests.  So call it 
 		// only once at the start of main.
+		words = new ArrayList<String>();
+		BFS = new ArrayList<String>();
+		DFS = new ArrayList<String>();
+		rungs = 0;
 	}
 	
 	/**
@@ -84,7 +95,7 @@ public class Main {
 		words.add(keyboard.next().toUpperCase());
 		
 		/* Command is /quit */
-		if (words.get(0).equals("/quit")) { words.clear(); }
+		if (words.get(0).equals("/QUIT")) { System.exit(0); }
 		
 		words.add(keyboard.next().toUpperCase());
 		
@@ -95,18 +106,31 @@ public class Main {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// Return empty list if no ladder.
-		// TODO some code
+		
+		/* Create dictionary */
 		Set<String> dict = makeDictionary();
-		// TODO more code
+		
+		// TODO code
+		DFS.add(start);
+		
+		// Fill rest of ArrayList here
+		
+		DFS.add(end);
 		
 		return null; // replace this line later with real return
 	}
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-		
-		// TODO some code
+    	
+    	/* Create dictionary */
 		Set<String> dict = makeDictionary();
-		// TODO more code
+		
+		// TODO code
+		BFS.add(start);
+
+		// Fill rest of ArrayList here
+		
+		BFS.add(end);
 		
 		return null; // replace this line later with real return
 	}
@@ -128,7 +152,20 @@ public class Main {
 	}
 	
 	public static void printLadder(ArrayList<String> ladder) {
-		System.out.println("Hey, I'm printing your ladder!");
+		
+		if (ladder == null) {
+			System.out.println("no word ladder can be found between "
+								+ words.get(0).toLowerCase() + " and "
+								+ words.get(1).toLowerCase() + ".");
+		}
+		else {
+			System.out.println("a " + rungs + "-rung word ladder exists between "
+					+ words.get(0).toLowerCase() + " and "
+					+ words.get(1).toLowerCase() + ".");
+			for (int i = 0; i < words.size(); i++) {
+				System.out.println(words.get(i));
+			}
+		}
 	}
 	// TODO
 	// Other private static methods here
