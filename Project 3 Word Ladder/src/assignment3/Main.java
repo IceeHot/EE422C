@@ -52,25 +52,28 @@ public class Main {
 			
 		}
 		
+		/* Initialize variables */
+		initialize();
+		
 		while (true) {
-
-			/* Reset variables */
-			initialize();
 			
 			/* Take keyboard input */
 			parse(kb);
 			
-			/* Two input words are the same */
-			if (words.get(0).equals(words.get(1))) { printLadder(words); }
+			/* Check for differing word length */
+			if (words.get(0).length() != words.get(1).length()) { printLadder(null); }
 			
-			/* Two input words differ in length */
-			else if (words.get(0).length() != words.get(1).length()) { printLadder(null); }
+			/* Check if neighbors */
+			else if (isNeighbor(words.get(0), words.get(1))) { printLadder(words); }
 	
 			/* Call and print ladder methods */
 			else {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
+			
+			/* Reset Variables */
+			reset();
 		}
 	}
 	
@@ -155,8 +158,8 @@ public class Main {
 		
 		if (ladder == null) {
 			System.out.println("no word ladder can be found between "
-								+ words.get(0).toLowerCase() + " and "
-								+ words.get(1).toLowerCase() + ".");
+					+ words.get(0).toLowerCase() + " and "
+					+ words.get(1).toLowerCase() + ".");
 		}
 		else {
 			System.out.println("a " + rungs + "-rung word ladder exists between "
@@ -167,6 +170,32 @@ public class Main {
 			}
 		}
 	}
-	// TODO
-	// Other private static methods here
+	
+	/**
+	 * Reset variables
+	 */
+	private static void reset() {
+		words = new ArrayList<String>();
+		BFS = new ArrayList<String>();
+		DFS = new ArrayList<String>();
+		rungs = 0;
+	}
+	
+	/**
+	 * Check if two strings differ by one letter
+	 * @param a first word
+	 * @param b second word
+	 * @return true if words differ by one letter or less
+	 */
+	private static boolean isNeighbor(String a, String b) {
+		
+		int differs = 0;
+		
+		for (int i = 0; i < a.length(); i++) {
+			if (a.charAt(i) != b.charAt(i)) { differs++; }
+			if (differs > 1) { return false; }
+		}
+		
+		return true;
+	}
 }
