@@ -51,11 +51,10 @@ public class Main {
 			ps = System.out;
 			
 		}
+
+		initialize();
 		
 		while (true) {
-
-			/* Reset variables */
-			initialize();
 			
 			/* Take keyboard input */
 			parse(kb);
@@ -71,7 +70,20 @@ public class Main {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
+			
+			/* Reset variables */
+			reset();
 		}
+	}
+	
+	public static void initialize() {
+		// initialize your static variables or constants here.
+		// We will call this method before running our JUNIT tests.  So call it 
+		// only once at the start of main.
+		words = new ArrayList<String>();
+		BFS = new ArrayList<String>();
+		DFS = new ArrayList<String>();
+		rungs = 0;
 	}
 	
 	/**
@@ -158,10 +170,10 @@ public class Main {
 		}
 	}
 	
-	public static void initialize() {
-		// initialize your static variables or constants here.
-		// We will call this method before running our JUNIT tests.  So call it 
-		// only once at the start of main.
+	/**
+	 * Reset variables
+	 */
+	private static void reset() {
 		words = new ArrayList<String>();
 		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
