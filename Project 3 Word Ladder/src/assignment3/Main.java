@@ -52,10 +52,10 @@ public class Main {
 			
 		}
 		
-		/* Initialize variables */
-		initialize();
-		
 		while (true) {
+
+			/* Reset variables */
+			initialize();
 			
 			/* Take keyboard input */
 			parse(kb);
@@ -71,9 +71,6 @@ public class Main {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
-			
-			/* Reset Variables */
-			reset();
 		}
 	}
 	
@@ -158,8 +155,8 @@ public class Main {
 		
 		if (ladder == null) {
 			System.out.println("no word ladder can be found between "
-					+ words.get(0).toLowerCase() + " and "
-					+ words.get(1).toLowerCase() + ".");
+								+ words.get(0).toLowerCase() + " and "
+								+ words.get(1).toLowerCase() + ".");
 		}
 		else {
 			System.out.println("a " + rungs + "-rung word ladder exists between "
@@ -170,17 +167,7 @@ public class Main {
 			}
 		}
 	}
-	
-	/**
-	 * Reset variables
-	 */
-	private static void reset() {
-		words = new ArrayList<String>();
-		BFS = new ArrayList<String>();
-		DFS = new ArrayList<String>();
-		rungs = 0;
-	}
-	
+
 	/**
 	 * Check if two strings differ by one letter
 	 * @param a first word
