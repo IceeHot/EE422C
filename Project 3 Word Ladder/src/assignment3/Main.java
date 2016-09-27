@@ -22,7 +22,6 @@ public class Main {
 	/* Static variables */
 	public static ArrayList<String> words;
 	public static Queue<ArrayList<String>> queue;
-	public static ArrayList<String> BFS;
 	public static ArrayList<String> DFS;
 	
 	public static void main(String[] args) throws Exception {
@@ -82,7 +81,6 @@ public class Main {
 		// only once at the start of main.
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
-		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
 	}
 	
@@ -120,6 +118,12 @@ public class Main {
 		return null; // replace this line later with real return
 	}
 	
+	/**
+	 * Product word ladder using BFS
+	 * @param start is beginning word
+	 * @param end is ending word
+	 * @return word ladder found
+	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
     	
     	/* Create dictionary */
@@ -128,29 +132,28 @@ public class Main {
 		/* Remove start word from dictionary */
 		dict.remove(start);
 		
-		/* Store starting word to BFS */
-		BFS.add(start);
+		/* Store starting word to new ArrayList */
+		ArrayList<String> startList = new ArrayList<String>();
+		startList.add(start);
 		
 		/* Store starting ArrayList to be searched */
-		queue.add(BFS);
+		queue.add(startList);
 		
 		while (!queue.isEmpty() && !queue.peek().equals(end)) {
 			
-			/* Take first item in queue */
+			/* Take first item out of queue */
 			ArrayList<String> list = queue.remove();
 			
 			/* Check if last element of list is end */
-			if (list.get(list.size() - 1).equals(end)) {
-				return list;
-			}
+			if (list.get(list.size() - 1).equals(end)) { return list; }
 			
 			/* Continue while words are left in the dictionary */
 			for (Iterator<String> i = dict.iterator(); i.hasNext();) {
 				
-				/* Next word in dictionary */
+				/* Next word from dictionary */
 				String next = i.next();
 				
-				/* Check if words are one letter different */
+				/* Check if next word and last word are one letter different */
 				if (isNeighbor(next, list.get(list.size() - 1))) {
 					
 					/* New list to add to queue */
@@ -176,7 +179,7 @@ public class Main {
 		Set<String> words = new HashSet<String>();
 		Scanner infile = null;
 		try {
-			infile = new Scanner (new File("short_dict.txt"));
+			infile = new Scanner (new File("five_letter_words.txt"));
 		} catch (FileNotFoundException e) {
 			System.out.println("Dictionary File not Found!");
 			e.printStackTrace();
@@ -211,7 +214,6 @@ public class Main {
 	private static void reset() {
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
-		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
 	}
 
