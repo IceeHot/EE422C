@@ -21,6 +21,7 @@ public class Main {
 	
 	/* Static variables */
 	public static ArrayList<String> words;
+	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> BFS;
 	public static ArrayList<String> DFS;
 	public static int rungs;
@@ -68,7 +69,7 @@ public class Main {
 			/* Call and print ladder methods */
 			else {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
-				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+				//printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
 			
 			/* Reset variables */
@@ -81,6 +82,7 @@ public class Main {
 		// We will call this method before running our JUNIT tests.  So call it 
 		// only once at the start of main.
 		words = new ArrayList<String>();
+		queue = new LinkedList<ArrayList<String>>();
 		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
 		rungs = 0;
@@ -117,8 +119,6 @@ public class Main {
 		
 		// Fill rest of ArrayList here
 		
-		DFS.add(end);
-		
 		return null; // replace this line later with real return
 	}
 	
@@ -127,21 +127,50 @@ public class Main {
     	/* Create dictionary */
 		Set<String> dict = makeDictionary();
 		
-		// TODO code
+		/* Remove start word from dictionary */
+		dict.remove(start);
+		
+		/* Store starting word to BFS */
 		BFS.add(start);
-
-		// Fill rest of ArrayList here
 		
-		BFS.add(end);
+		/* Store starting ArrayList to be searched */
+		queue.add(BFS);
 		
-		return null; // replace this line later with real return
+		System.out.println(queue);
+		
+		while (!queue.isEmpty() && !queue.peek().equals(end)) {
+			
+			ArrayList<String> list = queue.remove();
+			
+			if (list.get(list.size() - 1).equals(end)) {
+				return list;
+			}
+			
+			for (Iterator<String> i = dict.iterator(); i.hasNext(); i.remove()) {
+				if (isNeighbor(i.next(), BFS.get(BFS.size() - 1))) {
+					
+					/* This line needs fixing */
+					ArrayList<String> newList = new ArrayList<String>(queue.poll());
+					
+					System.out.println(newList);
+					
+					list.add(i.next());
+					
+					System.out.println(newList);
+					
+					queue.add(newList);
+				}
+			}
+		}
+		
+		return BFS;
 	}
     
 	public static Set<String> makeDictionary() {
 		Set<String> words = new HashSet<String>();
 		Scanner infile = null;
 		try {
-			infile = new Scanner (new File("five_letter_words.txt"));
+			infile = new Scanner (new File("short_dict.txt"));
 		} catch (FileNotFoundException e) {
 			System.out.println("Dictionary File not Found!");
 			e.printStackTrace();
@@ -175,6 +204,7 @@ public class Main {
 	 */
 	private static void reset() {
 		words = new ArrayList<String>();
+		queue = new LinkedList<ArrayList<String>>();
 		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
 		rungs = 0;
