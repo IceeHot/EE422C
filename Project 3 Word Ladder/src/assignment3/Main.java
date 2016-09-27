@@ -24,7 +24,6 @@ public class Main {
 	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> BFS;
 	public static ArrayList<String> DFS;
-	public static int rungs;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -85,7 +84,6 @@ public class Main {
 		queue = new LinkedList<ArrayList<String>>();
 		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
-		rungs = 0;
 	}
 	
 	/**
@@ -136,34 +134,42 @@ public class Main {
 		/* Store starting ArrayList to be searched */
 		queue.add(BFS);
 		
-		System.out.println(queue);
-		
 		while (!queue.isEmpty() && !queue.peek().equals(end)) {
 			
+			/* Take first item in queue */
 			ArrayList<String> list = queue.remove();
 			
+			/* Check if last element of list is end */
 			if (list.get(list.size() - 1).equals(end)) {
 				return list;
 			}
 			
-			for (Iterator<String> i = dict.iterator(); i.hasNext(); i.remove()) {
-				if (isNeighbor(i.next(), BFS.get(BFS.size() - 1))) {
+			/* Continue while words are left in the dictionary */
+			for (Iterator<String> i = dict.iterator(); i.hasNext();) {
+				
+				/* Next word in dictionary */
+				String next = i.next();
+				
+				/* Check if words are one letter different */
+				if (isNeighbor(next, list.get(list.size() - 1))) {
 					
-					/* This line needs fixing */
-					ArrayList<String> newList = new ArrayList<String>(queue.poll());
+					/* New list to add to queue */
+					ArrayList<String> newList = new ArrayList<String>(list);
 					
-					System.out.println(newList);
+					/* Add word that differs by only one letter */
+					newList.add(next);
 					
-					list.add(i.next());
-					
-					System.out.println(newList);
-					
+					/* Add newList back to queue */
 					queue.add(newList);
+					
+					/* Remove used word from dictionary */
+					i.remove();
 				}
 			}
 		}
 		
-		return BFS;
+		/* Return next element of queue */
+	    return queue.peek();
 	}
     
 	public static Set<String> makeDictionary() {
@@ -190,11 +196,11 @@ public class Main {
 								+ words.get(1).toLowerCase() + ".");
 		}
 		else {
-			System.out.println("a " + rungs + "-rung word ladder exists between "
+			System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between "
 					+ words.get(0).toLowerCase() + " and "
 					+ words.get(1).toLowerCase() + ".");
-			for (int i = 0; i < words.size(); i++) {
-				System.out.println(words.get(i).toLowerCase());
+			for (int i = 0; i < ladder.size(); i++) {
+				System.out.println(ladder.get(i).toLowerCase());
 			}
 		}
 	}
@@ -207,7 +213,6 @@ public class Main {
 		queue = new LinkedList<ArrayList<String>>();
 		BFS = new ArrayList<String>();
 		DFS = new ArrayList<String>();
-		rungs = 0;
 	}
 
 	/**

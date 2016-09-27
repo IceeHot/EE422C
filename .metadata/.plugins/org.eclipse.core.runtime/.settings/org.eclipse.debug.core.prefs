@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n<expression enabled\="true" text\="x[j]"/>\n<expression enabled\="true" text\="x[min]"/>\n<expression enabled\="true" text\="x[a]"/>\n<expression enabled\="true" text\="x[b]"/>\n</watchExpressions>\n
+prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n<expression enabled\="true" text\="list.get(list.size() - 1)"/>\n<expression enabled\="true" text\="queue"/>\n</watchExpressions>\n
