@@ -68,13 +68,9 @@ public class Main {
 	
 			/* Call and print ladder methods */
 			else {
-				//printLadder(getWordLadderBFS(words.get(0), words.get(1)));
-				//reset();
+				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
-			
-			/* Reset variables */
-			reset();
 		}
 	}
 	
@@ -112,6 +108,8 @@ public class Main {
 	 * @return found word ladder
 	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
+		
+		reset();
 		
 		/* Add starting word to ArrayList */
 		ArrayList<String> begin = new ArrayList<String>();
@@ -178,6 +176,8 @@ public class Main {
 	 * @return found word ladder
 	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
+    	
+    	reset();
 		
 		/* Remove start word from dictionary */
 		dict.remove(start);
