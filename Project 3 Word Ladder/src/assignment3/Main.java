@@ -276,7 +276,7 @@ public class Main {
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		
-		if (ladder == null) {
+		if (ladder == null || ladder.size() == 0) {
 			System.out.println("no word ladder can be found between "
 								+ words.get(0).toLowerCase() + " and "
 								+ words.get(1).toLowerCase() + ".");
@@ -341,7 +341,7 @@ public class Main {
 		while (!isOptimized(ladder)) {
 			
 			/* Loop starts at first word */
-			for (int i = 0; i < ladder.size() - 3; i++) {
+			for (int i = 0; i < ladder.size() - 2; i++) {
 				
 				/* Loop starts at third word */
 				for (int j = i + 2; j < ladder.size(); j++) {
@@ -350,7 +350,7 @@ public class Main {
 					if (isNeighbor(ladder.get(i), ladder.get(j))) {
 						
 						/* Remove all elements in between i and j */
-						ladder.subList(i + 1, j).clear();	
+						ladder.subList(i + 1, j).clear();
 					}
 				}
 			}
@@ -368,7 +368,7 @@ public class Main {
 	private static boolean isOptimized(ArrayList<String> ladder) {
 		
 		/* Loop starts at first word */
-		for (int i = 0; i < ladder.size() - 3; i++) {
+		for (int i = 0; i < ladder.size() - 2; i++) {
 			
 			/* Loop starts at third word */
 			for (int j = i + 2; j < ladder.size(); j++) {
