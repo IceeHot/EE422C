@@ -26,7 +26,7 @@ public class Main {
 	public static Set<String> dict;
 	public static boolean found;
 	public static long startTime;
-	public static int delay = 10000;
+	public static int delay = 15000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -89,10 +89,9 @@ public class Main {
 		
 		/* Input two words from Keyboard */
 		words.add(keyboard.next().toUpperCase());
+		if (words.get(0).equals("/QUIT")) { System.exit(0); }
 		words.add(keyboard.next().toUpperCase());
-		
-		/* Command is /quit */
-		if (words.get(0).equals("/QUIT") || words.get(1).equals("/QUIT")) { System.exit(0); }
+		if (words.get(1).equals("/QUIT")) { System.exit(0); }
 		
 		return words;
 	}
