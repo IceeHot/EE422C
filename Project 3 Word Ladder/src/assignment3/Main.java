@@ -69,7 +69,10 @@ public class Main {
 			/* Call and print ladder methods */
 			else {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				System.out.println();
+				
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+				System.out.println();
 			}
 		}
 	}
@@ -117,8 +120,23 @@ public class Main {
 		
 		/* Call recursive helper method */
 		DFSHelper(start, end, begin);
+		ArrayList<String> option1 = new ArrayList<String>();
+		option1 = optimize(DFS);
 		
-		return optimize(DFS);
+		/* Reset between calls */
+		reset();
+		
+		/* Try reversing order */
+		begin.clear();
+		begin.add(end);
+		DFSHelper(end, start, begin);
+		ArrayList<String> option2 = new ArrayList<String>();
+		option2 = optimize(DFS);
+		Collections.reverse(option2);
+		
+		/* Take shortest ladder */
+		if (option1.size() < option2.size()) { return option1; }
+		else { return option2; }
 		
 	}
 	
