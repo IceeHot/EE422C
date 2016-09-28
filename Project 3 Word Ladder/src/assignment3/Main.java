@@ -25,6 +25,8 @@ public class Main {
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
 	public static boolean found;
+	public static long startTime;
+	public static int delay = 10000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -134,8 +136,10 @@ public class Main {
 		option2 = optimize(DFS);
 		Collections.reverse(option2);
 		
-		/* Take shortest ladder */
-		if (option1.size() < option2.size()) { return option1; }
+		/* Take best ladder */
+		if (option2.isEmpty()) { return option1; }
+		else if (option1.isEmpty()) { return option2; }
+		else if (option1.size() < option2.size()) { return option1; }
 		else { return option2; }
 		
 	}
@@ -147,6 +151,8 @@ public class Main {
 	 * @param begin is starting ArrayList
 	 */
 	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
+		
+		if (checkTime()) { return; }
 		
 		/* Last word is end word */
 		if (begin.get(begin.size() - 1).equals(end)) {
@@ -289,6 +295,7 @@ public class Main {
 		DFS = new ArrayList<String>();
 		found = false;
 		dict = makeDictionary();
+		startTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -307,6 +314,11 @@ public class Main {
 		}
 		
 		return true;
+	}
+	
+	private static boolean checkTime() {
+		if (System.currentTimeMillis() - startTime > delay) { return true; }
+		return false;
 	}
 	
 	/**
