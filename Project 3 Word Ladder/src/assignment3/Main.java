@@ -26,7 +26,7 @@ public class Main {
 	public static Set<String> dict;
 	public static boolean found;
 	public static long startTime;
-	public static int delay = 15000;
+	public static int delay = 5000;
 	
 	public static void main(String[] args) throws Exception {
 		
