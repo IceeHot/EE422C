@@ -24,6 +24,7 @@ public class Main {
 	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
+	public static long startTime;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -67,9 +68,9 @@ public class Main {
 	
 			/* Call and print ladder methods */
 			else {
-				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				//printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				reset();
-				//printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
 			
 			/* Reset variables */
@@ -78,12 +79,10 @@ public class Main {
 	}
 	
 	public static void initialize() {
-		// initialize your static variables or constants here.
-		// We will call this method before running our JUNIT tests.  So call it 
-		// only once at the start of main.
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
+		startTime = System.currentTimeMillis();
 		dict = makeDictionary();
 	}
 	
@@ -105,40 +104,32 @@ public class Main {
 		return words;
 	}
 	
+	/**
+	 * Produce word ladder using DFS
+	 * @param start is beginning word
+	 * @param end is ending word
+	 * @return found word ladder
+	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
-		// Returned list should be ordered start to end.  Include start and end.
-		// Return empty list if no ladder.
-		boolean failed = false;																					//Creating boolean flag if can't find word ladder;
-		DFS.add(start);																							//Adding start word to DFS																			
-		dict.remove(DFS.get(DFS.size() - 1));																	/* Remove start words from dictionary */
+		/* Add starting word to ArrayList */
+		ArrayList<String> begin = new ArrayList<String>();
+		begin.add(start);
 		
-		while(!(DFS.contains(end)) && !failed){																	/*continue looping until it finds the end word, or it fails*/
-			for (Iterator<String> i = dict.iterator(); i.hasNext() && !(DFS.contains(end));){
-				String next = i.next();
-				if(isNeighbor(DFS.get(DFS.size() - 1), next)){													//check if the next line in the dictionary is a neighbor to the current word
-					getWordLadderDFS(next, end);																//do getWordLadderDFS again with the neighbor and the end word
-				}
-			}	
-			if(!DFS.contains(end))																				//sets failure to true if the recursive calls to getWordLadderDFS does not find the end word
-				failed = true;
-		}
-		if(DFS.contains((end)))																					//returns DFS if end word is found, returns null otherwise
-			return DFS;
-		DFS.clear();
+		/* Call recursive helper method */
+		DFSHelper(start, end, begin);
+		
 		return DFS;
+		
 	}
     		
 	/**
-	 * Product word ladder using BFS
+	 * Produce word ladder using BFS
 	 * @param start is beginning word
 	 * @param end is ending word
-	 * @return word ladder found
+	 * @return found word ladder
 	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-    	
-    	/* Create dictionary */
-		Set<String> dict = makeDictionary();
 		
 		/* Remove start word from dictionary */
 		dict.remove(start);
@@ -228,9 +219,10 @@ public class Main {
 	 * Reset variables
 	 */
 	private static void reset() {
-		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
+		startTime = System.currentTimeMillis();
+		dict = makeDictionary();
 	}
 
 	/**
@@ -249,5 +241,55 @@ public class Main {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Recursive helper to getWordLadderDFS
+	 * @param start is starting word
+	 * @param end is ending word
+	 * @param begin is starting ArrayList
+	 */
+	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
+		
+		if (checkTime()) { return; }
+		
+		/* Last word is end word */
+		if (begin.get(begin.size() - 1).equals(end)) {
+			
+			/* Store first path in queue */
+			queue.add(begin);
+			
+			/* Check length and set shortest path */
+			if (DFS.isEmpty() || DFS.size() > begin.size()) {
+				DFS = new ArrayList<String>(begin);
+			}
+			return;
+		}
+		
+		/* Iterate while dictionary has remaining objects */
+		for (Iterator<String> i = dict.iterator(); i.hasNext();) {
+			
+			/* Next item in dictionary */
+			String next = i.next();
+			
+			/* Check for one letter difference and not containing used word */
+			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next)) {
+				
+				/* New ladder for recursive call */
+				ArrayList<String> newPath = begin;
+				newPath.add(next);
+				
+				/* Recursive call with new beginning */
+				DFSHelper(start, end, newPath);
+				
+				/* Remove last element from newPath */
+				newPath.remove(newPath.size() - 1);
+			}
+		}
+	}
+	
+	private static boolean checkTime() {
+		if (System.currentTimeMillis() - startTime > 20000) { return true; }
+		return false;
 	}
 }
