@@ -5,7 +5,7 @@
  * bma862
  * 16455
  * Devin Amatya
- * <Student2 EID>
+ * dga383
  * 16455
  * Slip days used: 0
  * Git URL: https://github.com/atchisonbrent/EE422C-Project3.git
@@ -68,7 +68,7 @@ public class Main {
 	
 			/* Call and print ladder methods */
 			else {
-				//printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
 				reset();
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
@@ -288,6 +288,10 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Checks current time against starting time
+	 * @return true if taking > 20 seconds
+	 */
 	private static boolean checkTime() {
 		if (System.currentTimeMillis() - startTime > 20000) { return true; }
 		return false;
