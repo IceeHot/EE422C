@@ -336,15 +336,27 @@ public class Main {
 	 * @return optimized word ladder
 	 */
 	private static ArrayList<String> optimize(ArrayList<String> ladder) {
+		
+		/* Continues while still not optimized */
 		while (!isOptimized(ladder)) {
+			
+			/* Loop starts at first word */
 			for (int i = 0; i < ladder.size() - 3; i++) {
+				
+				/* Loop starts at third word */
 				for (int j = i + 2; j < ladder.size(); j++) {
+					
+					/* If i is neighbor to j */
 					if (isNeighbor(ladder.get(i), ladder.get(j))) {
+						
+						/* Remove all elements in between i and j */
 						ladder.subList(i + 1, j).clear();	
 					}
 				}
 			}
 		}
+		
+		/* Returns optimized ladder */
 		return ladder;
 	}
 	
@@ -354,13 +366,23 @@ public class Main {
 	 * @return true if optimized
 	 */
 	private static boolean isOptimized(ArrayList<String> ladder) {
+		
+		/* Loop starts at first word */
 		for (int i = 0; i < ladder.size() - 3; i++) {
+			
+			/* Loop starts at third word */
 			for (int j = i + 2; j < ladder.size(); j++) {
+				
+				/* If i is neighbor to j */
 				if (isNeighbor(ladder.get(i), ladder.get(j))) {
+					
+					/* Ladder is not yet optimized */
 					return false;
 				}
 			}
 		}
+		
+		/* Ladder is optimized */
 		return true;
 	}
 }
