@@ -24,7 +24,7 @@ public class Main {
 	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
-	public static long startTime;
+	public static boolean found;
 	public static int delay = 4000;
 	
 	public static void main(String[] args) throws Exception {
@@ -83,7 +83,7 @@ public class Main {
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
-		startTime = System.currentTimeMillis();
+		found = false;
 		dict = makeDictionary();
 	}
 	
@@ -223,7 +223,7 @@ public class Main {
 	private static void reset() {
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
-		startTime = System.currentTimeMillis();
+		found = false;
 		dict = makeDictionary();
 	}
 
@@ -253,10 +253,10 @@ public class Main {
 	 */
 	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
 		
-		if (checkTime()) { return; }
-		
 		/* Last word is end word */
 		if (begin.get(begin.size() - 1).equals(end)) {
+			
+			found = true;
 			
 			/* Store first path in queue */
 			queue.add(begin);
@@ -284,19 +284,12 @@ public class Main {
 				/* Recursive call with new beginning */
 				DFSHelper(start, end, newPath);
 				
+				if (found) { return; }
+				
 				/* Remove last element from newPath */
 				newPath.remove(newPath.size() - 1);
 			}
 		}
-	}
-	
-	/**
-	 * Checks current time against starting time
-	 * @return true if taking > 20 seconds
-	 */
-	private static boolean checkTime() {
-		if (System.currentTimeMillis() - startTime > delay) { return true; }
-		return false;
 	}
 	
 	/**
