@@ -23,6 +23,7 @@ public class Main {
 	public static ArrayList<String> words;
 	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> DFS;
+	public static Set<String> dict;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -67,6 +68,7 @@ public class Main {
 			/* Call and print ladder methods */
 			else {
 				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				reset();
 				//printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
 			
@@ -82,6 +84,7 @@ public class Main {
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
+		dict = makeDictionary();
 	}
 	
 	/**
@@ -106,18 +109,26 @@ public class Main {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// Return empty list if no ladder.
+		boolean failed = false;																					//Creating boolean flag if can't find word ladder;
+		DFS.add(start);																							//Adding start word to DFS																			
+		dict.remove(DFS.get(DFS.size() - 1));																	/* Remove start words from dictionary */
 		
-		/* Create dictionary */
-		Set<String> dict = makeDictionary();
-		
-		// TODO code
-		DFS.add(start);
-		
-		// Fill rest of ArrayList here
-		
-		return null; // replace this line later with real return
+		while(!(DFS.contains(end)) && !failed){																	/*continue looping until it finds the end word, or it fails*/
+			for (Iterator<String> i = dict.iterator(); i.hasNext() && !(DFS.contains(end));){
+				String next = i.next();
+				if(isNeighbor(DFS.get(DFS.size() - 1), next)){													//check if the next line in the dictionary is a neighbor to the current word
+					getWordLadderDFS(next, end);																//do getWordLadderDFS again with the neighbor and the end word
+				}
+			}	
+			if(!DFS.contains(end))																				//sets failure to true if the recursive calls to getWordLadderDFS does not find the end word
+				failed = true;
+		}
+		if(DFS.contains((end)))																					//returns DFS if end word is found, returns null otherwise
+			return DFS;
+		DFS.clear();
+		return DFS;
 	}
-	
+    		
 	/**
 	 * Product word ladder using BFS
 	 * @param start is beginning word
@@ -199,7 +210,8 @@ public class Main {
 								+ words.get(1).toLowerCase() + ".");
 		}
 		else {
-			System.out.println("a " + (ladder.size() - 2) + "-rung word ladder exists between "
+			System.out.println("a " + (ladder.size() - 2)
+					+ "-rung word ladder exists between "
 					+ words.get(0).toLowerCase() + " and "
 					+ words.get(1).toLowerCase() + ".");
 			for (int i = 0; i < ladder.size(); i++) {
