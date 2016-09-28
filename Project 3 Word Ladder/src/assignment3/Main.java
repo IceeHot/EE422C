@@ -316,6 +316,10 @@ public class Main {
 		return true;
 	}
 	
+	/**
+	 * Checks passed time since startTime
+	 * @return true if delay amount of time has passed
+	 */
 	private static boolean checkTime() {
 		if (System.currentTimeMillis() - startTime > delay) { return true; }
 		return false;
