@@ -25,6 +25,7 @@ public class Main {
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
 	public static long startTime;
+	public static int delay = 10000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -119,7 +120,7 @@ public class Main {
 		/* Call recursive helper method */
 		DFSHelper(start, end, begin);
 		
-		return DFS;
+		return optimize(DFS);
 		
 	}
     		
@@ -293,7 +294,37 @@ public class Main {
 	 * @return true if taking > 20 seconds
 	 */
 	private static boolean checkTime() {
-		if (System.currentTimeMillis() - startTime > 20000) { return true; }
+		if (System.currentTimeMillis() - startTime > delay) { return true; }
 		return false;
+	}
+	
+	/**
+	 * Optimizes word ladder
+	 * @param ladder to optimize
+	 * @return optimized word ladder
+	 */
+	private static ArrayList<String> optimize(ArrayList<String> ladder) {
+		while (!isOptimized(ladder)) {
+			for (int i = 2; i < ladder.size(); i++) {
+				if (isNeighbor(ladder.get(i - 2), ladder.get(i))) {
+					ladder.remove(i - 1);
+				}
+			}
+		}
+		return ladder;
+	}
+	
+	/**
+	 * Checks if word ladder is optimized
+	 * @param ladder to check
+	 * @return true if optimized
+	 */
+	private static boolean isOptimized(ArrayList<String> ladder) {
+		for (int i = 2; i < ladder.size(); i++) {
+			if (isNeighbor(ladder.get(i - 2), ladder.get(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
