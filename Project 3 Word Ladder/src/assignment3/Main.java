@@ -25,7 +25,6 @@ public class Main {
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
 	public static boolean found;
-	public static int delay = 4000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -69,8 +68,8 @@ public class Main {
 	
 			/* Call and print ladder methods */
 			else {
-				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
-				reset();
+				//printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+				//reset();
 				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			}
 			
@@ -123,6 +122,53 @@ public class Main {
 		
 		return optimize(DFS);
 		
+	}
+	
+	/**
+	 * Recursive helper to getWordLadderDFS
+	 * @param start is starting word
+	 * @param end is ending word
+	 * @param begin is starting ArrayList
+	 */
+	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
+		
+		/* Last word is end word */
+		if (begin.get(begin.size() - 1).equals(end)) {
+			
+			found = true;
+			
+			/* Store first path in queue */
+			queue.add(begin);
+			
+			/* Check length and set shortest path */
+			if (DFS.isEmpty() || DFS.size() > begin.size()) {
+				DFS = new ArrayList<String>(begin);
+			}
+			return;
+		}
+		
+		/* Iterate while dictionary has remaining objects */
+		for (Iterator<String> i = dict.iterator(); i.hasNext();) {
+			
+			/* Next item in dictionary */
+			String next = i.next();
+			
+			/* Check for one letter difference and not containing used word */
+			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next)) {
+				
+				/* New ladder for recursive call */
+				ArrayList<String> newPath = begin;
+				newPath.add(next);
+				
+				/* Recursive call with new beginning */
+				DFSHelper(start, end, newPath);
+				
+				if (found) { return; }
+				
+				/* Remove last element from newPath */
+				newPath.remove(newPath.size() - 1);
+			}
+		}
 	}
     		
 	/**
@@ -243,53 +289,6 @@ public class Main {
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Recursive helper to getWordLadderDFS
-	 * @param start is starting word
-	 * @param end is ending word
-	 * @param begin is starting ArrayList
-	 */
-	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
-		
-		/* Last word is end word */
-		if (begin.get(begin.size() - 1).equals(end)) {
-			
-			found = true;
-			
-			/* Store first path in queue */
-			queue.add(begin);
-			
-			/* Check length and set shortest path */
-			if (DFS.isEmpty() || DFS.size() > begin.size()) {
-				DFS = new ArrayList<String>(begin);
-			}
-			return;
-		}
-		
-		/* Iterate while dictionary has remaining objects */
-		for (Iterator<String> i = dict.iterator(); i.hasNext();) {
-			
-			/* Next item in dictionary */
-			String next = i.next();
-			
-			/* Check for one letter difference and not containing used word */
-			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next)) {
-				
-				/* New ladder for recursive call */
-				ArrayList<String> newPath = begin;
-				newPath.add(next);
-				
-				/* Recursive call with new beginning */
-				DFSHelper(start, end, newPath);
-				
-				if (found) { return; }
-				
-				/* Remove last element from newPath */
-				newPath.remove(newPath.size() - 1);
-			}
-		}
 	}
 	
 	/**
