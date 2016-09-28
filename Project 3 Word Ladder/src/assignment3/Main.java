@@ -202,6 +202,10 @@ public class Main {
 		return words;
 	}
 	
+	/**
+	 * Prints ladder to console
+	 * @param ladder is ArrayList to print
+	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		
 		if (ladder == null) {
