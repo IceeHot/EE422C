@@ -62,20 +62,11 @@ public class Main {
 			/* Take keyboard input */
 			parse(kb);
 			
-			/* Check for differing word length */
-			if (words.get(0).length() != words.get(1).length()) { printLadder(null); }
+			printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+			System.out.println();
 			
-			/* Check if neighbors */
-			else if (isNeighbor(words.get(0), words.get(1))) { printLadder(words); }
-	
-			/* Call and print ladder methods */
-			else {
-				printLadder(getWordLadderBFS(words.get(0), words.get(1)));
-				System.out.println();
-				
-				printLadder(getWordLadderDFS(words.get(0), words.get(1)));
-				System.out.println();
-			}
+			printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+			System.out.println();
 		}
 	}
 	
@@ -114,7 +105,14 @@ public class Main {
 	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
+		/* Reset everything before starting */
 		reset();
+		
+		/* Check for differing word length */
+		if (words.get(0).length() != words.get(1).length()) { return null; }
+		
+		/* Check if neighbors */
+		else if (isNeighbor(words.get(0), words.get(1))) { return words; }
 		
 		/* Add starting word to ArrayList */
 		ArrayList<String> begin = new ArrayList<String>();
@@ -201,7 +199,14 @@ public class Main {
 	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
     	
+    	/* Reset everything before starting */
     	reset();
+    	
+    	/* Check for differing word length */
+		if (words.get(0).length() != words.get(1).length()) { return null; }
+		
+		/* Check if neighbors */
+		else if (isNeighbor(words.get(0), words.get(1))) { return words; }
 		
 		/* Remove start word from dictionary */
 		dict.remove(start);
