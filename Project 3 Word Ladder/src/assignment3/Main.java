@@ -25,7 +25,7 @@ public class Main {
 	public static ArrayList<String> DFS;
 	public static Set<String> dict;
 	public static long startTime;
-	public static int delay = 10000;
+	public static int delay = 4000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -94,13 +94,14 @@ public class Main {
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
 		
-		/* Input from Keyboard */
+		words.clear();
+		
+		/* Input two words from Keyboard */
+		words.add(keyboard.next().toUpperCase());
 		words.add(keyboard.next().toUpperCase());
 		
 		/* Command is /quit */
-		if (words.get(0).equals("/QUIT")) { System.exit(0); }
-		
-		words.add(keyboard.next().toUpperCase());
+		if (words.get(0).equals("/QUIT") || words.get(1).equals("/QUIT")) { System.exit(0); }
 		
 		return words;
 	}
@@ -305,9 +306,11 @@ public class Main {
 	 */
 	private static ArrayList<String> optimize(ArrayList<String> ladder) {
 		while (!isOptimized(ladder)) {
-			for (int i = 2; i < ladder.size(); i++) {
-				if (isNeighbor(ladder.get(i - 2), ladder.get(i))) {
-					ladder.remove(i - 1);
+			for (int i = 0; i < ladder.size() - 3; i++) {
+				for (int j = i + 2; j < ladder.size(); j++) {
+					if (isNeighbor(ladder.get(i), ladder.get(j))) {
+						ladder.subList(i + 1, j).clear();	
+					}
 				}
 			}
 		}
@@ -320,9 +323,11 @@ public class Main {
 	 * @return true if optimized
 	 */
 	private static boolean isOptimized(ArrayList<String> ladder) {
-		for (int i = 2; i < ladder.size(); i++) {
-			if (isNeighbor(ladder.get(i - 2), ladder.get(i))) {
-				return false;
+		for (int i = 0; i < ladder.size() - 3; i++) {
+			for (int j = i + 2; j < ladder.size(); j++) {
+				if (isNeighbor(ladder.get(i), ladder.get(j))) {
+					return false;
+				}
 			}
 		}
 		return true;
