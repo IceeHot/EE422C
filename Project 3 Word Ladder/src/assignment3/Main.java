@@ -23,10 +23,11 @@ public class Main {
 	public static ArrayList<String> words;
 	public static Queue<ArrayList<String>> queue;
 	public static ArrayList<String> DFS;
+	public static ArrayList<String> usedWords;
 	public static Set<String> dict;
 	public static boolean found;
 	public static long startTime;
-	public static int delay = 6000;
+	public static int delay = 10000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -70,6 +71,7 @@ public class Main {
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
+		usedWords = new ArrayList<String>();
 		found = false;
 		dict = makeDictionary();
 	}
@@ -158,19 +160,12 @@ public class Main {
 	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
 		
 		if (checkTime()) { return; }
+		if (found) { return; }
 		
 		/* Last word is end word */
 		if (begin.get(begin.size() - 1).equals(end)) {
-			
 			found = true;
-			
-			/* Store first path in queue */
-			queue.add(begin);
-			
-			/* Check length and set shortest path */
-			if (DFS.isEmpty() || DFS.size() > begin.size()) {
-				DFS = new ArrayList<String>(begin);
-			}
+			DFS = new ArrayList<String>(begin);
 			return;
 		}
 		
@@ -181,19 +176,19 @@ public class Main {
 			String next = i.next();
 			
 			/* Check for one letter difference and not containing used word */
-			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next)) {
+			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next) && !usedWords.contains(next)) {
 				
 				/* New ladder for recursive call */
-				ArrayList<String> newPath = begin;
-				newPath.add(next);
+				begin.add(next);
+				usedWords.add(next);
 				
 				/* Recursive call with new beginning */
-				DFSHelper(start, end, newPath);
+				DFSHelper(start, end, begin);
 				
 				if (found) { return; }
 				
-				/* Remove last element from newPath */
-				newPath.remove(newPath.size() - 1);
+				/* Remove last element from begin */
+				begin.remove(begin.size() - 1);
 			}
 		}
 	}
@@ -315,6 +310,7 @@ public class Main {
 		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
+		usedWords = new ArrayList<String>();
 		found = false;
 		dict = makeDictionary();
 		startTime = System.currentTimeMillis();
