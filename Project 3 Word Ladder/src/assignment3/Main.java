@@ -20,14 +20,12 @@ import java.io.*;
 public class Main {
 	
 	/* Static variables */
-	public static ArrayList<String> words;
 	public static Queue<ArrayList<String>> queue;
-	public static ArrayList<String> DFS;
 	public static ArrayList<String> usedWords;
+	public static ArrayList<String> words;
+	public static ArrayList<String> DFS;
 	public static Set<String> dict;
 	public static boolean found;
-	public static long startTime;
-	public static int delay = 10000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -57,23 +55,29 @@ public class Main {
 		}
 
 		initialize();
-			/* Take keyboard input */
-			parse(kb);
-			
-			printLadder(getWordLadderBFS(words.get(0), words.get(1)));
-			System.out.println();
-			
-			printLadder(getWordLadderDFS(words.get(0), words.get(1)));
-			System.out.println();
+		
+		/* Take keyboard input */
+		parse(kb);
+		
+		/* Print BFS ladder */
+		printLadder(getWordLadderBFS(words.get(0), words.get(1)));
+		System.out.println();
+		
+		/* Print DFS ladder */
+		printLadder(getWordLadderDFS(words.get(0), words.get(1)));
+		System.out.println();
 	}
 	
+	/**
+	 * Useless
+	 */
 	public static void initialize() {
-		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
-		DFS = new ArrayList<String>();
 		usedWords = new ArrayList<String>();
-		found = false;
+		words = new ArrayList<String>();
+		DFS = new ArrayList<String>();
 		dict = makeDictionary();
+		found = false;
 	}
 	
 	/**
@@ -83,6 +87,7 @@ public class Main {
 	 */
 	public static ArrayList<String> parse(Scanner keyboard) {
 		
+		/* Clear prior input before taking more */
 		words.clear();
 		
 		/* Input two words from Keyboard */
@@ -104,11 +109,12 @@ public class Main {
 		
 		/* Reset everything before starting */
 		reset();
-		words.add(start);
-		words.add(end);
 		start = start.toUpperCase();
 		end = end.toUpperCase();
+		words.add(start);
+		words.add(end);
 		
+		/* Ensure words are in dictionary */
 		if (!dict.contains(start) || !dict.contains(end)) { return null; }
 		
 		/* Check for differing word length */
@@ -123,9 +129,11 @@ public class Main {
 		
 		/* Call recursive helper method */
 		DFSHelper(start, end, begin);
-		ArrayList<String> OptimizedLadder = optimize(DFS);
 		
-		return OptimizedLadder;
+		/* Optimize word ladder */
+		DFS = optimize(DFS);
+		
+		return DFS;
 		
 	}
 	
@@ -137,7 +145,7 @@ public class Main {
 	 */
 	private static void DFSHelper(String start, String end, ArrayList<String> begin) {
 		
-		if (checkTime()) { return; }
+		/* Found a valid ladder */
 		if (found) { return; }
 		
 		/* Last word is end word */
@@ -154,15 +162,20 @@ public class Main {
 			String next = i.next();
 			
 			/* Check for one letter difference and not containing used word */
-			if (isNeighbor(next, begin.get(begin.size() - 1)) && !begin.contains(next) && !usedWords.contains(next)) {
+			if (isNeighbor(next, begin.get(begin.size() - 1))
+					&& !begin.contains(next)
+					&& !usedWords.contains(next)) {
 				
 				/* New ladder for recursive call */
 				begin.add(next);
+				
+				/* Add word to used list */
 				usedWords.add(next);
 				
 				/* Recursive call with new beginning */
 				DFSHelper(start, end, begin);
 				
+				/* Found a valid ladder */
 				if (found) { return; }
 				
 				/* Remove last element from begin */
@@ -181,11 +194,12 @@ public class Main {
     	
     	/* Reset everything before starting */
     	reset();
-    	words.add(start);
-    	words.add(end);
     	start = start.toUpperCase();
 		end = end.toUpperCase();
+    	words.add(start);
+    	words.add(end);
 		
+		/* Ensure words are in dictionary */
 		if (!dict.contains(start) || !dict.contains(end)) { return null; }
     	
     	/* Check for differing word length */
@@ -282,13 +296,12 @@ public class Main {
 	 * Reset variables
 	 */
 	private static void reset() {
-		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
-		DFS = new ArrayList<String>();
 		usedWords = new ArrayList<String>();
-		found = false;
+		words = new ArrayList<String>();
+		DFS = new ArrayList<String>();
 		dict = makeDictionary();
-		startTime = System.currentTimeMillis();
+		found = false;
 	}
 
 	/**
@@ -307,15 +320,6 @@ public class Main {
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Checks passed time since startTime
-	 * @return true if delay amount of time has passed
-	 */
-	private static boolean checkTime() {
-		if (System.currentTimeMillis() - startTime > delay) { return true; }
-		return false;
 	}
 	
 	/**

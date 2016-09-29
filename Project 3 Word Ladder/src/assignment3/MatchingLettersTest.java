@@ -13,8 +13,11 @@ public class MatchingLettersTest {
 		/*4 letters match*/
 		ArrayList<String> result = Main.getWordLadderDFS("heart", "hears");
 		ArrayList<String> result2 = Main.getWordLadderBFS("heart", "hears");
+		ArrayList<String> answer = new ArrayList<String>();
+		answer.add("heart");
+		answer.add("hears");
 		
-		assertEquals(true, result == null && result2 == null);
+		assertEquals(true, result.equals(answer) && result2.equals(answer));
 		
 		/*3 letters match*/
 		result = Main.getWordLadderDFS("heart", "heads");
