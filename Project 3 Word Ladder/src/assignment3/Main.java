@@ -116,10 +116,7 @@ public class Main {
 		
 		/* Check if neighbors */
 		else if (isNeighbor(start, end)) { 
-			ArrayList<String> sameList = new ArrayList<String>();
-			sameList.add(start);
-			sameList.add(end);
-			return sameList;
+			return null;
 			}
 		
 		/* Add starting word to ArrayList */
@@ -128,28 +125,9 @@ public class Main {
 		
 		/* Call recursive helper method */
 		DFSHelper(start, end, begin);
-		ArrayList<String> option1 = new ArrayList<String>();
-		option1 = optimize(DFS);
+		ArrayList<String> OptimizedLadder = optimize(DFS);
 		
-		/* Reset between calls */
-		reset();
-		words.add(start);
-		words.add(end);
-		
-		/* Try reversing order */
-		begin.clear();
-		begin.add(end);
-		DFSHelper(end, start, begin);
-		ArrayList<String> option2 = new ArrayList<String>();
-		option2 = optimize(DFS);
-		Collections.reverse(option2);
-		
-		/* Take best ladder */
-		if(option1.isEmpty() && option2.isEmpty()){ return null; }
-		else if (option2.isEmpty()) { return option1; }
-		else if (option1.isEmpty()) { return option2; }
-		else if (option1.size() < option2.size()) { return option1; }
-		else { return option2; }
+		return OptimizedLadder;
 		
 	}
 	
@@ -217,10 +195,7 @@ public class Main {
 		
 		/* Check if neighbors */
 		else if (isNeighbor(start, end)) { 
-			ArrayList<String> sameList = new ArrayList<String>();
-			sameList.add(start);
-			sameList.add(end);
-			return sameList;
+			return null;
 			}
 		
 		/* Remove start word from dictionary */
