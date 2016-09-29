@@ -10,9 +10,11 @@ public class MatchingLettersTest {
 
 	@Test
 	public void test() {
+		
 		/*4 letters match*/
 		ArrayList<String> result = Main.getWordLadderDFS("heart", "hears");
 		ArrayList<String> result2 = Main.getWordLadderBFS("heart", "hears");
+		
 		ArrayList<String> answer = new ArrayList<String>();
 		answer.add("heart");
 		answer.add("hears");
@@ -32,9 +34,7 @@ public class MatchingLettersTest {
 		/*1 letter match*/
 		result = Main.getWordLadderDFS("heart", "hurls");
 		result2 = Main.getWordLadderBFS("heart", "hurls");
-		assertEquals(true, (result.size() > 2) && (result2.size() > 2));
-		
-		
+		assertEquals(true, (result.size() > 2) && (result2.size() > 2));		
 		
 	}
 }

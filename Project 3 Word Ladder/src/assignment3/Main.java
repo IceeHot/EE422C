@@ -109,10 +109,10 @@ public class Main {
 		
 		/* Reset everything before starting */
 		reset();
+		words.add(start.toLowerCase());
+		words.add(end.toLowerCase());
 		start = start.toUpperCase();
 		end = end.toUpperCase();
-		words.add(start);
-		words.add(end);
 		
 		/* Ensure words are in dictionary */
 		if (!dict.contains(start) || !dict.contains(end)) { return null; }
@@ -194,10 +194,10 @@ public class Main {
     	
     	/* Reset everything before starting */
     	reset();
-    	start = start.toUpperCase();
+		words.add(start.toLowerCase());
+		words.add(end.toLowerCase());
+		start = start.toUpperCase();
 		end = end.toUpperCase();
-    	words.add(start);
-    	words.add(end);
 		
 		/* Ensure words are in dictionary */
 		if (!dict.contains(start) || !dict.contains(end)) { return null; }
