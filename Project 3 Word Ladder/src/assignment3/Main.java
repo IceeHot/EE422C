@@ -109,6 +109,8 @@ public class Main {
 		start = start.toUpperCase();
 		end = end.toUpperCase();
 		
+		if (!dict.contains(start) || !dict.contains(end)) { return null; }
+		
 		/* Check for differing word length */
 		if (start.length() != end.length()) { return null; }
 		
@@ -207,6 +209,8 @@ public class Main {
     	words.add(end);
     	start = start.toUpperCase();
 		end = end.toUpperCase();
+		
+		if (!dict.contains(start) || !dict.contains(end)) { return null; }
     	
     	/* Check for differing word length */
 		if (start.length() != end.length()) { return null; }
