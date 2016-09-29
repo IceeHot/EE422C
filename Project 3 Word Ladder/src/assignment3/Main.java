@@ -26,7 +26,7 @@ public class Main {
 	public static Set<String> dict;
 	public static boolean found;
 	public static long startTime;
-	public static int delay = 5000;
+	public static int delay = 6000;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -56,9 +56,6 @@ public class Main {
 		}
 
 		initialize();
-		
-		while (true) {
-			
 			/* Take keyboard input */
 			parse(kb);
 			
@@ -67,7 +64,6 @@ public class Main {
 			
 			printLadder(getWordLadderDFS(words.get(0), words.get(1)));
 			System.out.println();
-		}
 	}
 	
 	public static void initialize() {
@@ -104,14 +100,25 @@ public class Main {
 	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
+		words.clear();
+		words.add(start);
+		words.add(end);
+		
 		/* Reset everything before starting */
 		reset();
+		start = start.toUpperCase();
+		end = end.toUpperCase();
 		
 		/* Check for differing word length */
-		if (words.get(0).length() != words.get(1).length()) { return null; }
+		if (start.length() != end.length()) { return null; }
 		
 		/* Check if neighbors */
-		else if (isNeighbor(words.get(0), words.get(1))) { return words; }
+		else if (isNeighbor(start, end)) { 
+			ArrayList<String> sameList = new ArrayList<String>();
+			sameList.add(start);
+			sameList.add(end);
+			return sameList;
+			}
 		
 		/* Add starting word to ArrayList */
 		ArrayList<String> begin = new ArrayList<String>();
@@ -134,7 +141,8 @@ public class Main {
 		Collections.reverse(option2);
 		
 		/* Take best ladder */
-		if (option2.isEmpty()) { return option1; }
+		if(option1.isEmpty() && option2.isEmpty()){ return null; }
+		else if (option2.isEmpty()) { return option1; }
 		else if (option1.isEmpty()) { return option2; }
 		else if (option1.size() < option2.size()) { return option1; }
 		else { return option2; }
@@ -198,14 +206,24 @@ public class Main {
 	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
     	
+    	words.clear();
+    	words.add(start);
+    	words.add(end);
+    	
     	/* Reset everything before starting */
     	reset();
-    	
+    	start = start.toUpperCase();
+		end = end.toUpperCase();
     	/* Check for differing word length */
-		if (words.get(0).length() != words.get(1).length()) { return null; }
+		if (start.length() != end.length()) { return null; }
 		
 		/* Check if neighbors */
-		else if (isNeighbor(words.get(0), words.get(1))) { return words; }
+		else if (isNeighbor(start, end)) { 
+			ArrayList<String> sameList = new ArrayList<String>();
+			sameList.add(start);
+			sameList.add(end);
+			return sameList;
+			}
 		
 		/* Remove start word from dictionary */
 		dict.remove(start);
@@ -275,16 +293,16 @@ public class Main {
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		
-		if (ladder == null || ladder.size() == 0) {
+		if (ladder == null || ladder.size() == 0 ) {
 			System.out.println("no word ladder can be found between "
 								+ words.get(0).toLowerCase() + " and "
-								+ words.get(1).toLowerCase() + ".");
+								+ words.get(words.size() - 1).toLowerCase() + ".");
 		}
 		else {
 			System.out.println("a " + (ladder.size() - 2)
 					+ "-rung word ladder exists between "
-					+ words.get(0).toLowerCase() + " and "
-					+ words.get(1).toLowerCase() + ".");
+					+ ladder.get(0).toLowerCase() + " and "
+					+ ladder.get(ladder.size() - 1).toLowerCase() + ".");
 			for (int i = 0; i < ladder.size(); i++) {
 				System.out.println(ladder.get(i).toLowerCase());
 			}
