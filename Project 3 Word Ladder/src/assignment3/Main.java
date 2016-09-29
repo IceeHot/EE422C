@@ -100,12 +100,10 @@ public class Main {
 	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
-		words.clear();
-		words.add(start);
-		words.add(end);
-		
 		/* Reset everything before starting */
 		reset();
+		words.add(start);
+		words.add(end);
 		start = start.toUpperCase();
 		end = end.toUpperCase();
 		
@@ -131,6 +129,8 @@ public class Main {
 		
 		/* Reset between calls */
 		reset();
+		words.add(start);
+		words.add(end);
 		
 		/* Try reversing order */
 		begin.clear();
@@ -206,14 +206,13 @@ public class Main {
 	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
     	
-    	words.clear();
-    	words.add(start);
-    	words.add(end);
-    	
     	/* Reset everything before starting */
     	reset();
+    	words.add(start);
+    	words.add(end);
     	start = start.toUpperCase();
 		end = end.toUpperCase();
+    	
     	/* Check for differing word length */
 		if (start.length() != end.length()) { return null; }
 		
@@ -296,7 +295,7 @@ public class Main {
 		if (ladder == null || ladder.size() == 0 ) {
 			System.out.println("no word ladder can be found between "
 								+ words.get(0).toLowerCase() + " and "
-								+ words.get(words.size() - 1).toLowerCase() + ".");
+								+ words.get(1).toLowerCase() + ".");
 		}
 		else {
 			System.out.println("a " + (ladder.size() - 2)
@@ -313,6 +312,7 @@ public class Main {
 	 * Reset variables
 	 */
 	private static void reset() {
+		words = new ArrayList<String>();
 		queue = new LinkedList<ArrayList<String>>();
 		DFS = new ArrayList<String>();
 		found = false;
