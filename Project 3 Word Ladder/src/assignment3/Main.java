@@ -115,9 +115,7 @@ public class Main {
 		if (start.length() != end.length()) { return null; }
 		
 		/* Check if neighbors */
-		else if (isNeighbor(start, end)) { 
-			return null;
-			}
+		else if (isNeighbor(start, end)) { return words; }
 		
 		/* Add starting word to ArrayList */
 		ArrayList<String> begin = new ArrayList<String>();
@@ -194,9 +192,7 @@ public class Main {
 		if (start.length() != end.length()) { return null; }
 		
 		/* Check if neighbors */
-		else if (isNeighbor(start, end)) { 
-			return null;
-			}
+		else if (isNeighbor(start, end)) { return words; }
 		
 		/* Remove start word from dictionary */
 		dict.remove(start);
