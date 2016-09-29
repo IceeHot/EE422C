@@ -123,9 +123,12 @@ public class Main {
 		/* Check if neighbors */
 		else if (isNeighbor(start, end)) { return words; }
 		
-		/* Add starting word to ArrayList */
+		/* Add starting word to beginning */
 		ArrayList<String> begin = new ArrayList<String>();
 		begin.add(start);
+		
+		/* Add starting word to used words */
+		usedWords.add(start);
 		
 		/* Call recursive helper method */
 		DFSHelper(start, end, begin);
