@@ -26,24 +26,21 @@ public abstract class Critter {
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
 
-	// Gets the package name.  This assumes that Critter and its subclasses are all in the same package.
-	static {
-		myPackage = Critter.class.getPackage().toString().split(" ")[1];
-	}
+	/* Gets the package name.  Assumes that Critter and its subclasses are all in the same package. */
+	static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 	
+	/* Returns a random integer */
 	private static java.util.Random rand = new java.util.Random();
-	public static int getRandomInt(int max) {
-		return rand.nextInt(max);
-	}
+	public static int getRandomInt(int max) { return rand.nextInt(max); }
 	
-	public static void setSeed(long new_seed) {
-		rand = new java.util.Random(new_seed);
-	}
+	/* Get random seed */
+	public static void setSeed(long new_seed) { rand = new java.util.Random(new_seed); }
 	
 	
-	/* a one-character long string that visually depicts your critter in the ASCII interface */
+	/* A one-character long string that visually depicts your critter in the ASCII interface */
 	public String toString() { return ""; }
 	
+	/* Returns energy */
 	private int energy = 0;
 	protected int getEnergy() { return energy; }
 	
