@@ -121,7 +121,13 @@ public abstract class Critter {
 	 * @param critter_class_name
 	 * @throws InvalidCritterException
 	 */
-	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+	public static void makeCritter(String critterClass) throws InvalidCritterException {
+		
+		/* Ensure critterClass is either craig or algae */
+		if (critterClass.equals("Craig") || critterClass.equals("Algae")) {
+			System.out.println("Making " + critterClass);
+		}
+		else { throw new InvalidCritterException(critterClass); }
 	}
 	
 	/**

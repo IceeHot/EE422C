@@ -14,6 +14,10 @@
 package assignment4;
 
 public class InvalidCritterException extends Exception {
+	
+	/* Default generated serialVersionUID */
+	private static final long serialVersionUID = 1L;
+	
 	String offending_class;
 	
 	public InvalidCritterException(String critter_class_name) {

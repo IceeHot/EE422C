@@ -16,7 +16,7 @@ import java.util.*;
 
 public class Input {
 	
-	public static void takeInput(Scanner kb) throws InvalidCritterException {
+	public static void takeInput(Scanner kb) {
 		
 		while (true) {
 			
@@ -24,15 +24,21 @@ public class Input {
 			System.out.print("critters> ");
 			
 			/* Next line of input to string array */
-			String[] input = kb.nextLine().toLowerCase().split(" ");
+			String[] input = kb.nextLine().split(" ");
 			
 			for (int i = 0; i < input.length; i++) {
 				
 				/* Command is quit */
-				if (input[i].equals("quit")) { System.exit(0); }
+				if (input[i].equals("quit")) { 
+					if (input.length == 1) { System.exit(0); }
+					else { printInvalid(input); break; }
+				}
 				
 				/* Command is show */
-				else if (input[i].equals("show")) { Critter.displayWorld(); }
+				else if (input[i].equals("show")) {
+					if (input.length == 1) { Critter.displayWorld(); break; }
+					else { printInvalid(input); break; }
+				}
 				
 				/* Command is step */
 				else if (input[i].equals("step")) {
@@ -41,7 +47,11 @@ public class Input {
 					if (i < input.length - 1) {
 						
 						/* Number of steps to take */
-						int steps = Integer.parseInt(input[i + 1]);
+						int steps;
+						
+						/* Try parsing an integer */
+						try { steps = Integer.parseInt(input[i + 1]); }
+						catch (NumberFormatException e) { printError(input); break; }
 						
 						/* Take steps */
 						for (int j = 0; j < steps; j++) { Critter.worldTimeStep(); }
@@ -51,12 +61,22 @@ public class Input {
 					/* Take one step */
 					else { Critter.worldTimeStep(); }
 					
+					break;
 				}
 				
 				/* Command is seed */
 				else if (input[i].equals("seed")) {
+					
 					/* Set seed with long input */
-					if (i < input.length - 1) { Critter.setSeed(Long.parseLong(input[i + 1])); }
+					if (i < input.length - 1) {
+						try { Critter.setSeed(Long.parseLong(input[i + 1])); }
+						catch (NumberFormatException e) { printError(input); break; } 
+					}
+					
+					/* Invalid input */
+					else { printError(input); }
+					
+					break;
 				}
 				
 				/* Command is make */
@@ -69,13 +89,23 @@ public class Input {
 						int count = 1;
 						
 						/* Check for specified number of critters to initialize */
-						if (i < input.length - 2) { count = Integer.parseInt(input[i + 2]); }
+						if (i < input.length - 2) {
+							try { count = Integer.parseInt(input[i + 2]); }
+							catch (NumberFormatException e) { printError(input); break; } 
+						}
 						
 						/* Initialize critters */
-						for (int j = 0; j < count; j++) { Critter.makeCritter(input[i + 1]); }
+						for (int j = 0; j < count; j++) {
+							try { Critter.makeCritter(input[i + 1]); }
+							catch (InvalidCritterException e) { printError(input); break; }
+						}
 						
 					}
 					
+					/* Invalid input */
+					else { printError(input); }
+					
+					break;
 				}
 				
 				/* Command is stats */
@@ -85,39 +115,53 @@ public class Input {
 					if (i < input.length - 1) {
 						
 						/* Give stats on Craig */
-						if (input[i + 1].equals("craig")) { Craig.runStats(Critter.getInstances(input[i + 1])); }
+						if (input[i + 1].equals("craig")) {
+							try { Craig.runStats(Critter.getInstances(input[i + 1])); }
+							catch (InvalidCritterException e) { printError(input); break; }
+						}
 						
 						/* Give stats on Algae */
-						else if (input[i + 1].equals("algae")) { Algae.runStats(Critter.getInstances(input[i + 1])); }
+						else if (input[i + 1].equals("algae")) {
+							try { Algae.runStats(Critter.getInstances(input[i + 1])); }
+							catch (InvalidCritterException e) { printError(input); break; }
+						}
 						
 						/* Invalid input */
-						else {
-							System.out.print("error processing: ");
-							for (int j = 0; j < input.length; j++) {
-								System.out.print(input[j]);
-								System.out.print(" ");
-							}
-							System.out.println();
-						}
+						else { printError(input); }
 						
 					}
 					
-				}
-				
-				else {
-					System.out.print("invalid command: ");
-					for (int j = 0; j < input.length; j++) {
-						System.out.print(input[j]);
-						System.out.print(" ");
-					}
-					System.out.println();
+					/* Invalid input */
+					else { printError(input); }
+					
 					break;
 				}
+				
+				/* Invalid command */
+				else { printInvalid(input); break; }
 				
 			}
 			
 		}
 		
+	}
+	
+	public static void printError(String[] input) {
+		System.out.print("error processing: ");
+		for (int i = 0; i < input.length; i++) {
+			System.out.print(input[i]);
+			System.out.print(" ");
+		}
+		System.out.println();
+	}
+	
+	public static void printInvalid(String[] input) {
+		System.out.print("invalid command: ");
+		for (int j = 0; j < input.length; j++) {
+			System.out.print(input[j]);
+			System.out.print(" ");
+		}
+		System.out.println();
 	}
 	
 }
