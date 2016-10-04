@@ -38,8 +38,9 @@ public class Main {
      * Main method.
      * @param args can be empty.  If not empty, provide two parameters -- the first is a file name, 
      * and the second is test (for test output, where all output to be directed to a String), or nothing.
+     * @throws InvalidCritterException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidCritterException {
     	
     	/* Check for arguments */
         if (args.length != 0) {
@@ -78,7 +79,7 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         
-        Critter.displayWorld();
+        Input.takeInput(kb);
         
         /* Write your code above */
         System.out.flush();
