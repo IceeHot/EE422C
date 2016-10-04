@@ -54,7 +54,7 @@ public class Craig extends Critter {
 			reproduce(child, Critter.getRandomInt(8));
 		}
 		
-		/* pick a new direction based on our genes */
+		/* Pick a new direction based on our genes */
 		int roll = Critter.getRandomInt(GENE_TOTAL);
 		int turn = 0;
 		while (genes[turn] <= roll) {

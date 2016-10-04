@@ -27,11 +27,11 @@ public class Main {
     private static String inputFile;	// input file, used instead of keyboard input if specified
     static ByteArrayOutputStream testOutputString;	// if test specified, holds all console output
     private static String myPackage;	// package of Critter file.  Critter cannot be in default package.
-    private static boolean DEBUG = false; // Use it or not, as you wish!
+    //private static boolean DEBUG = false; // Use it or not, as you wish!
     static PrintStream old = System.out;	// if you want to restore output to console
 
 
-    // Gets the package name.  The usage assumes that Critter and its subclasses are all in the same package.
+    // Gets the package name. Assumes that Critter and its subclasses are all in the same package.
     static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 
     /**
@@ -78,7 +78,7 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         
-        System.out.println("GLHF");
+        Critter.displayWorld();
         
         /* Write your code above */
         System.out.flush();

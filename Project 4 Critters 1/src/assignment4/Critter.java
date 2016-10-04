@@ -20,7 +20,6 @@ import java.util.List;
  * no new public, protected or default-package code or data can be added to Critter
  */
 
-
 public abstract class Critter {
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
@@ -36,7 +35,6 @@ public abstract class Critter {
 	/* Get random seed */
 	public static void setSeed(long new_seed) { rand = new java.util.Random(new_seed); }
 	
-	
 	/* A one-character long string that visually depicts your critter in the ASCII interface */
 	public String toString() { return ""; }
 	
@@ -47,11 +45,64 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
+	/* 
+	 * Walks in given direction
+	 * Still need to check world wrapping
+	 */
 	protected final void walk(int direction) {
+		switch (direction) {
+			case 0: 	this.x_coord++;
+						break;
+			case 1: 	this.x_coord++;
+						this.y_coord++;
+						break;
+			case 2: 	this.y_coord++;
+						break;
+			case 3: 	this.x_coord--;
+						this.y_coord++;
+						break;
+			case 4: 	this.x_coord--;
+						break;
+			case 5: 	this.x_coord--;
+						this.y_coord--;
+						break;
+			case 6: 	this.y_coord--;
+						break;
+			case 7: 	this.x_coord++;
+						this.y_coord--;
+						break;
+			default:	break;
+		}
 	}
 	
+	/* 
+	 * Runs in given direction
+	 * Still need to check world wrapping
+	 */
 	protected final void run(int direction) {
-		
+		switch (direction) {
+			case 0: 	this.x_coord += 2;
+						break;
+			case 1: 	this.x_coord += 2;
+						this.y_coord += 2;
+						break;
+			case 2: 	this.y_coord += 2;
+						break;
+			case 3: 	this.x_coord -= 2;
+						this.y_coord += 2;
+						break;
+			case 4: 	this.x_coord -= 2;
+						break;
+			case 5: 	this.x_coord -= 2;
+						this.y_coord -= 2;
+						break;
+			case 6: 	this.y_coord -= 2;
+						break;
+			case 7: 	this.x_coord += 2;
+						this.y_coord -= 2;
+						break;
+			default:	break;
+		}
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
@@ -71,6 +122,7 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
+		
 	}
 	
 	/**
@@ -109,11 +161,11 @@ public abstract class Critter {
 		System.out.println();		
 	}
 	
-	/* the TestCritter class allows some critters to "cheat". If you want to 
+	/* The TestCritter class allows some critters to "cheat". If you want to 
 	 * create tests of your Critter model, you can create subclasses of this class
 	 * and then use the setter functions contained here. 
 	 * 
-	 * NOTE: you must make sure that the setter functions work with your implementation
+	 * NOTE: You must make sure that the setter functions work with your implementation
 	 * of Critter. That means, if you're recording the positions of your critters
 	 * using some sort of external grid or some other data structure in addition
 	 * to the x_coord and y_coord functions, then you MUST update these setter functions
@@ -165,10 +217,38 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
+		
 	}
 	
 	public static void worldTimeStep() {
+		
 	}
 	
-	public static void displayWorld() {}
+	public static void displayWorld() {
+		printEdge();
+		printMiddle();
+		printEdge();
+	}
+	
+	/**
+	 * Prints top and bottom edges of world
+	 */
+	private static void printEdge() {
+		System.out.print("+");
+		for (int i = 0; i < Params.world_width; i++) { System.out.print("-"); }
+		System.out.println("+");
+	}
+	
+	/**
+	 * Fills in middle of world
+	 */
+	private static void printMiddle() {
+		for (int i = 0; i < Params.world_height; i++) {
+			System.out.print("|");
+			for (int k = 0; k < Params.world_width; k++) {
+				System.out.print(" ");
+			}
+			System.out.println("|");
+		}
+	}
 }
