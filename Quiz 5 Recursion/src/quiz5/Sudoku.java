@@ -80,19 +80,17 @@ public class Sudoku {
 		
 		if (current == SIZE * SIZE) { return true; }
 		
-		for (int i = 0; i < SIZE; i++) {
-			for (int j = 0; j < SIZE; j++) {
-				if (b.board[i][j] == 0) {
-					for (int k = 1; k < SIZE + 1; k++) {
-						if (b.isSafe(k, current)) {
-							b.board[i][j] = k;
-							if (solve(b, current + 1)) { return true; }
-							else { b.board[i][j] = 0; }
-						}
-					}
+		if (b.board[current / SIZE][current % SIZE] == 0) {
+			for (int i = 0; i < SIZE; i++) {
+				if (b.isSafe(i + 1, current)) {
+					b.board[current / SIZE][current % SIZE] = i + 1;
+					if (solve(b, current + 1)) { return true; }
+					else { b.board[current / SIZE][current % SIZE] = 0; }
 				}
 			}
 		}
+		else { if (solve(b, current + 1)) { return true; } }
+		
 		return false;
 	}
 }
@@ -150,18 +148,23 @@ class SudokuBoard {
 	public boolean isSafe(int a, int n) {
 		
 		/* Check same row */
-		for (int i = 0; i < SIZE; i++) {
-			if (this.board[n / SIZE][i] == a) {
-				return false;
-			}
-		}
+		for (int i = 0; i < SIZE; i++) { if (this.board[n / SIZE][i] == a) { return false; } }
 		
 		/* Check same column */
-		for (int i = 0; i < SIZE; i++) {
-			if (this.board[i][n / SIZE] == a) {
-				return false;
+		for (int i = 0; i < SIZE; i++) { if (this.board[i][n % SIZE] == a) { return false; } }
+		
+		/* Find row */
+		int row = N * ((n / SIZE) / N);
+		
+		/* Find column */
+		int col = N * ((n % SIZE) / N);
+
+		/* Check box around n */
+		for (int i = row; i < row + N; i++) {
+			for (int j = col; j < col + N; j++) {
+				if (this.board[i][j] == a) { return false; }
 			}
-		}
+		}	
 		
 		/* Safe */
 		return true;
