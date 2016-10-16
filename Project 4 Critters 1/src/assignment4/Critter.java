@@ -141,10 +141,6 @@ public abstract class Critter {
 	 */
 	public static void makeCritter(String critterClass) throws InvalidCritterException {
 		
-		Class critter = critterClass.getClass();
-		
-		
-		//else { throw new InvalidCritterException(critterClass); }
 	}
 	
 	/**
@@ -160,6 +156,7 @@ public abstract class Critter {
 		List<Critter> result = new java.util.ArrayList<Critter>();
 		
 		return result;
+		
 	}
 	
 	/**

@@ -14,7 +14,12 @@
 package assignment4;
 import java.util.*;
 
+import assignment4.Critter.TestCritter;
+
 public class Input {
+	
+	private static String myPackage;
+	static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 	
 	/**
 	 * Take input and process commands accordingly
@@ -116,6 +121,12 @@ public class Input {
 					
 					/* Check for name after make */
 					if (input.length == 2) {
+						
+						try { TestCritter c = (TestCritter) Class.forName(myPackage + "." + input[1]).newInstance(); }
+						catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+							try { throw new InvalidCritterException(input[1]); }
+							catch (InvalidCritterException e1) { e1.printStackTrace(); }
+						}
 						
 						/* Give stats on Craig */
 						if (input[1].equals("Craig")) {
