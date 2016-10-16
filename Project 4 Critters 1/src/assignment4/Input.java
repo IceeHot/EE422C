@@ -94,7 +94,7 @@ public class Input {
 					/* Check for specified number of critters to initialize */
 					if (input.length == 3) {
 						try { count = Integer.parseInt(input[2]); }
-						catch (NumberFormatException e) { printError(input); } 
+						catch (NumberFormatException e) { printError(input); continue; } 
 					}
 					
 					/* Initialize critters */
