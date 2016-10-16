@@ -30,116 +30,116 @@ public class Input {
 			
 			/* Next line of input to string array */
 			String[] input = kb.nextLine().split(" ");
-				
-			/* Command is quit */
-			if (input[0].equals("quit")) { 
-				if (input.length == 1) { System.exit(0); }
-				else { printInvalid(input); }
-			}
 			
-			/* Command is show */
-			else if (input[0].equals("show")) {
-				if (input.length == 1) { Critter.displayWorld(); }
-				else { printInvalid(input); }
-			}
-			
-			/* Command is step */
-			else if (input[0].equals("step")) {
+			/* Ensure not empty input */
+			if (input.length > 0) {
 				
-				/* Check for integer after step */
-				if (input.length == 2) {
-					
-					/* Number of steps to take */
-					int steps = 0;
-					
-					/* Try parsing an integer */
-					try { steps = Integer.parseInt(input[1]); }
-					catch (NumberFormatException e) { printError(input); }
-					
-					/* Take steps */
-					for (int i = 0; i < steps; i++) { Critter.worldTimeStep(); }
-					
+				/* Command is quit */
+				if (input[0].equals("quit")) { 
+					if (input.length == 1) { System.exit(0); }
+					else { printInvalid(input); }
 				}
 				
-				/* Take one step */
-				else if (input.length == 1) { Critter.worldTimeStep(); }
-				
-				/* Invalid input length */
-				else { printInvalid(input); }
-			}
-			
-			/* Command is seed */
-			else if (input[0].equals("seed")) {
-				
-				/* Set seed with long input */
-				if (input.length == 2) {
-					try { Critter.setSeed(Long.parseLong(input[1])); }
-					catch (NumberFormatException e) { printError(input); } 
+				/* Command is show */
+				else if (input[0].equals("show")) {
+					if (input.length == 1) { Critter.displayWorld(); }
+					else { printInvalid(input); }
 				}
 				
-				/* Invalid input length */
-				else { printError(input); }
-				
-			}
-			
-			/* Command is make */
-			else if (input[0].equals("make")) {
-				
-				/* Check for name after make */
-				if (input.length > 1 && input.length < 4) {
+				/* Command is step */
+				else if (input[0].equals("step")) {
 					
-					/* Number of critters to initialize */
-					int count = 1;
-					
-					/* Check for specified number of critters to initialize */
-					if (input.length == 3) {
-						try { count = Integer.parseInt(input[2]); }
-						catch (NumberFormatException e) { printError(input); continue; } 
+					/* Check for integer after step */
+					if (input.length == 2) {
+						
+						/* Number of steps to take */
+						int steps = 0;
+						
+						/* Try parsing an integer */
+						try { steps = Integer.parseInt(input[1]); }
+						catch (NumberFormatException e) { printError(input); }
+						
+						/* Take steps */
+						for (int i = 0; i < steps; i++) { Critter.worldTimeStep(); }
+						
 					}
 					
-					/* Initialize critters */
-					for (int i = 0; i < count; i++) {
-						try { Critter.makeCritter(input[1]); }
-						catch (InvalidCritterException e) { printError(input); }
-					}
+					/* Take one step */
+					else if (input.length == 1) { Critter.worldTimeStep(); }
 					
+					/* Invalid input length */
+					else { printInvalid(input); }
 				}
 				
-				/* Invalid input length */
-				else { printError(input); }
-				
-			}
-			
-			/* Command is stats */
-			else if (input[0].equals("stats")) {
-				
-				/* Check for name after make */
-				if (input.length == 2) {
+				/* Command is seed */
+				else if (input[0].equals("seed")) {
 					
-					/* Give stats on Craig */
-					if (input[1].equals("Craig")) {
-						try { Craig.runStats(Critter.getInstances(input[1])); }
-						catch (InvalidCritterException e) { printError(input); }
+					/* Set seed with long input */
+					if (input.length == 2) {
+						try { Critter.setSeed(Long.parseLong(input[1])); }
+						catch (NumberFormatException e) { printError(input); } 
 					}
 					
-					/* Give stats on Algae */
-					else if (input[1].equals("Algae")) {
-						try { Algae.runStats(Critter.getInstances(input[1])); }
-						catch (InvalidCritterException e) { printError(input); }
-					}
-					
-					/* Input class not Craig or Algae */
+					/* Invalid input length */
 					else { printError(input); }
 					
 				}
 				
-				/* Invalid input lengthh */
-				else { printError(input); }
+				/* Command is make */
+				else if (input[0].equals("make")) {
+					
+					/* Check for name after make */
+					if (input.length > 1 && input.length < 4) {
+						
+						/* Number of critters to initialize */
+						int count = 1;
+						
+						/* Check for specified number of critters to initialize */
+						if (input.length == 3) {
+							try { count = Integer.parseInt(input[2]); }
+							catch (NumberFormatException e) { printError(input); continue; } 
+						}
+						
+						/* Initialize critters */
+						for (int i = 0; i < count; i++) {
+							try { Critter.makeCritter(input[1]); }
+							catch (InvalidCritterException e) { printError(input); break; }
+						}
+
+					/* Invalid input length */
+					} else { printError(input); }
+					
+				}
 				
-			}
-			
-			/* Invalid command */
-			else { printInvalid(input); }
+				/* Command is stats */
+				else if (input[0].equals("stats")) {
+					
+					/* Check for name after make */
+					if (input.length == 2) {
+						
+						/* Give stats on Craig */
+						if (input[1].equals("Craig")) {
+							try { Craig.runStats(Critter.getInstances(input[1])); }
+							catch (InvalidCritterException e) { printError(input); }
+						}
+						
+						/* Give stats on Algae */
+						else if (input[1].equals("Algae")) {
+							try { Algae.runStats(Critter.getInstances(input[1])); }
+							catch (InvalidCritterException e) { printError(input); }
+						}
+						
+						/* Input class not Craig or Algae */
+						else { printError(input); }
+					
+					/* Invalid input length */
+					} else { printError(input); }
+					
+				/* Invalid command */
+				} else { printInvalid(input); }
+
+			/* No command entered */
+			} else { printInvalid(input); }
 			
 		}
 		
