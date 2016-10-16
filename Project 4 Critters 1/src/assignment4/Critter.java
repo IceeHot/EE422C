@@ -140,7 +140,21 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critterClass) throws InvalidCritterException {
+
+		try{
+		TestCritter newcrit = (TestCritter)  Class.forName(myPackage+ "." + critterClass).newInstance();
+		Critter.population.add(newcrit);
+		int xcord = Critter.getRandomInt(Params.world_width-1);
+		int ycord = Critter.getRandomInt(Params.world_height-1);
 		
+		newcrit.setEnergy(Params.start_energy);
+		newcrit.setY_coord(ycord);
+		newcrit.setX_coord(xcord);
+		
+		}
+		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e1){
+			throw new InvalidCritterException(critterClass);
+		}
 	}
 	
 	/**
