@@ -31,7 +31,7 @@ public class Main {
     static PrintStream old = System.out;	// if you want to restore output to console
 
 
-    // Gets the package name. Assumes that Critter and its subclasses are all in the same package.
+    /* Gets the package name. Assumes that Critter and its subclasses are all in the same package. */
     static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 
     /**

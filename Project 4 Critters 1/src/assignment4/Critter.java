@@ -50,29 +50,7 @@ public abstract class Critter {
 	 * Still need to check world wrapping
 	 */
 	protected final void walk(int direction) {
-		switch (direction) {
-			case 0: 	this.x_coord++;
-						break;
-			case 1: 	this.x_coord++;
-						this.y_coord++;
-						break;
-			case 2: 	this.y_coord++;
-						break;
-			case 3: 	this.x_coord--;
-						this.y_coord++;
-						break;
-			case 4: 	this.x_coord--;
-						break;
-			case 5: 	this.x_coord--;
-						this.y_coord--;
-						break;
-			case 6: 	this.y_coord--;
-						break;
-			case 7: 	this.x_coord++;
-						this.y_coord--;
-						break;
-			default:	break;
-		}
+		move(direction, 1);
 	}
 	
 	/* 
@@ -80,32 +58,72 @@ public abstract class Critter {
 	 * Still need to check world wrapping
 	 */
 	protected final void run(int direction) {
+		move(direction, 2);
+	}
+	
+	/**
+	 * Moves in given direction
+	 * @param direction to move in
+	 * @param steps to take
+	 */
+	protected final void move(int direction, int steps) {
+		
+		/* Update coordinates */
 		switch (direction) {
-			case 0: 	this.x_coord += 2;
+			case 0: 	this.x_coord += steps;
 						break;
-			case 1: 	this.x_coord += 2;
-						this.y_coord += 2;
+			case 1: 	this.x_coord += steps;
+						this.y_coord += steps;
 						break;
-			case 2: 	this.y_coord += 2;
+			case 2: 	this.y_coord += steps;
 						break;
-			case 3: 	this.x_coord -= 2;
-						this.y_coord += 2;
+			case 3: 	this.x_coord -= steps;
+						this.y_coord += steps;
 						break;
-			case 4: 	this.x_coord -= 2;
+			case 4: 	this.x_coord -= steps;
 						break;
-			case 5: 	this.x_coord -= 2;
-						this.y_coord -= 2;
+			case 5: 	this.x_coord -= steps;
+						this.y_coord -= steps;
 						break;
-			case 6: 	this.y_coord -= 2;
+			case 6: 	this.y_coord -= steps;
 						break;
-			case 7: 	this.x_coord += 2;
-						this.y_coord -= 2;
+			case 7: 	this.x_coord += steps;
+						this.y_coord -= steps;
 						break;
 			default:	break;
 		}
+		
+		/* Check for world wrapping */
+		
+		
 	}
 	
+	/**
+	 * Reproduces critter and sets new direction
+	 * @param offspring is new child
+	 * @param direction offspring will take
+	 */
 	protected final void reproduce(Critter offspring, int direction) {
+		
+		/* Ensure enough energy */
+		if (this.energy < Params.min_reproduce_energy) { return; }
+		
+		/* Offspring has half energy of parent */
+		offspring.energy = this.energy / 2;
+		
+		/* Parent gets half energy, rounding up */
+		this.energy = this.energy / 2 + this.energy % 2;
+		
+		/* Set proper coordinates */
+		offspring.x_coord = this.x_coord;
+		offspring.y_coord = this.y_coord;
+		
+		/* Move offspring in proper direction */
+		offspring.walk(direction);
+		
+		/* Add offspring to list of babies */
+		babies.add(offspring);
+		
 	}
 
 	public abstract void doTimeStep();
@@ -123,11 +141,10 @@ public abstract class Critter {
 	 */
 	public static void makeCritter(String critterClass) throws InvalidCritterException {
 		
-		/* Ensure critterClass is either craig or algae */
-		if (critterClass.equals("Craig") || critterClass.equals("Algae")) {
-			System.out.println("Making " + critterClass);
-		}
-		else { throw new InvalidCritterException(critterClass); }
+		Class critter = critterClass.getClass();
+		
+		
+		//else { throw new InvalidCritterException(critterClass); }
 	}
 	
 	/**
@@ -137,8 +154,11 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+		
+		Class critterClass = critter_class_name.getClass();
+		
 		List<Critter> result = new java.util.ArrayList<Critter>();
-	
+		
 		return result;
 	}
 	
