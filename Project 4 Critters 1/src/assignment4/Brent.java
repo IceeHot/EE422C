@@ -13,9 +13,6 @@
 
 package assignment4;
 
-/*
- * Example critter
- */
 public class Brent extends Critter {
 	
 	private int dir;

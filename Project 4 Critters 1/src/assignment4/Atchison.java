@@ -13,9 +13,6 @@
 
 package assignment4;
 
-/*
- * Example critter
- */
 public class Atchison extends Critter {
 	
 	private int dir;
@@ -31,7 +28,7 @@ public class Atchison extends Critter {
 	public void doTimeStep() {
 		
 		/* Take one step forward */
-		walk(dir);
+		run(dir);
 		
 		/* Check if able to reproduce */
 		if (getEnergy() > 100) {

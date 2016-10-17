@@ -45,12 +45,15 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
+	private boolean hasMoved;
+	
 	/* 
 	 * Walks in given direction
 	 */
 	protected final void walk(int direction) {
 		this.energy -= Params.walk_energy_cost;
-		move(direction, 1);
+		if (!this.hasMoved) { move(direction, 1); }
+		this.hasMoved = true;
 	}
 	
 	/* 
@@ -58,7 +61,8 @@ public abstract class Critter {
 	 */
 	protected final void run(int direction) {
 		this.energy -= Params.run_energy_cost;
-		move(direction, 2);
+		if (!this.hasMoved) { move(direction, 2); }
+		this.hasMoved = true;
 	}
 	
 	/**
@@ -151,9 +155,10 @@ public abstract class Critter {
 			Critter.population.add(newcrit);
 			
 			/* Initialize new critter values */
-			newcrit.energy =Params.start_energy;
-			newcrit.x_coord =Critter.getRandomInt(Params.world_width);
-			newcrit.y_coord=Critter.getRandomInt(Params.world_height);
+			newcrit.hasMoved = false;
+			newcrit.energy = Params.start_energy;
+			newcrit.x_coord = Critter.getRandomInt(Params.world_width);
+			newcrit.y_coord = Critter.getRandomInt(Params.world_height);
 			
 		}
 		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e){
@@ -273,7 +278,6 @@ public abstract class Critter {
 	public static void worldTimeStep() {
 		for(Critter ls: population){
 			ls.doTimeStep();
-			
 		}
 		
 		for (int i =0; i< population.size();i++){
@@ -323,14 +327,21 @@ public abstract class Critter {
 		
 	}
 		}// until this is encounter handling code
-		for (Critter babe : babies){
-			population.add(babe);
-		}
+		
+		/* Add all babies to population */
+		for (Critter b : babies){ population.add(b); }
 		babies.clear();
-		for (Critter alive:population){
-			if(alive.energy<=0){
+		
+		/* Remove dead critters */
+		for (Critter alive : population){
+			if(alive.energy - Params.rest_energy_cost <= 0){
 				population.remove(alive);
 			}
+		}
+		
+		/* Reset movement */
+		for (Critter c : population) {
+			c.hasMoved = false;
 		}
 	}
 	
