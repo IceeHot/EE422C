@@ -46,7 +46,7 @@ public abstract class Critter {
 	private int y_coord;
 	
 	private boolean hasMoved;
-	private boolean fighting = false;
+	private boolean fighting;
 	
 	/* 
 	 * Walks in given direction
@@ -194,6 +194,7 @@ public abstract class Critter {
 			
 			/* Initialize new critter values */
 			newcrit.hasMoved = false;
+			newcrit.fighting = false;
 			newcrit.energy = Params.start_energy;
 			newcrit.x_coord = Critter.getRandomInt(Params.world_width);
 			newcrit.y_coord = Critter.getRandomInt(Params.world_height);
