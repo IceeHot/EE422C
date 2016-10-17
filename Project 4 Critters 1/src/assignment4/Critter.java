@@ -271,7 +271,67 @@ public abstract class Critter {
 	}
 	
 	public static void worldTimeStep() {
+		for(Critter ls: population){
+			ls.doTimeStep();
+			
+		}
 		
+		for (int i =0; i< population.size();i++){
+			Critter count = population.get(i);
+			if(count.energy<=0){
+				continue;
+			}
+			for (int j=i+1;j<population.size();j++){
+				if(count.energy <=0){
+					break;
+				}
+				Critter chk = population.get(j);
+				if(chk.energy<=0){
+					continue;
+				}
+				if ( count.x_coord==chk.x_coord && count.y_coord==chk.y_coord){
+                    
+					boolean a =count.fight(chk.toString());
+					boolean b = chk.fight(count.toString());
+					if(a && b){
+						if (count.energy>=0 && chk.energy>=0){
+							if (count.x_coord == chk.x_coord && count.y_coord ==chk.y_coord){
+								int randcount = Critter.getRandomInt(count.energy+1);
+								int randchk = Critter.getRandomInt(chk.energy+1);
+								if(randchk >randcount){
+									chk.energy +=count.energy/2;
+									count.energy =0;
+								
+								}
+								
+								else{
+									count.energy+=chk.energy/2;
+									chk.energy=0;
+								}
+								
+							}
+							
+						}
+						
+						
+					}
+			}
+		
+		
+		
+		
+		
+	}
+		}// until this is encounter handling code
+		for (Critter babe : babies){
+			population.add(babe);
+		}
+		babies.clear();
+		for (Critter alive:population){
+			if(alive.energy<=0){
+				population.remove(alive);
+			}
+		}
 	}
 	
 	public static void displayWorld() {
