@@ -46,7 +46,7 @@ public abstract class Critter {
 	private int y_coord;
 	
 	private boolean hasMoved;
-	private boolean fighting;
+	private boolean fighting = false;
 	
 	/* 
 	 * Walks in given direction
@@ -201,7 +201,6 @@ public abstract class Critter {
 		}
 		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e){
 			throw new InvalidCritterException(critterClass); }
-	
 	}
 	
 	/**

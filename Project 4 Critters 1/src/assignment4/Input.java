@@ -97,7 +97,7 @@ public class Input {
 						/* Check for specified number of critters to initialize */
 						if (input.length == 3) {
 							try { count = Integer.parseInt(input[2]); }
-							catch (NumberFormatException e) { printError(input); continue; } 
+							catch (NumberFormatException e) { printError(input); continue; }
 						}
 						
 						/* Initialize critters */
@@ -114,7 +114,7 @@ public class Input {
 				/* Command is stats */
 				else if (input[0].equals("stats")) {
 					
-					/* Check for name after make */
+					/* Check for name after stats */
 					if (input.length == 2) {
 						try { Critter.runStats(Critter.getInstances(input[1])); }
 						catch (InvalidCritterException e) { printError(input); }
