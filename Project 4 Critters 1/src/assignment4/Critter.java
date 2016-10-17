@@ -262,7 +262,8 @@ public abstract class Critter {
 	 * Clear the world of all critters, dead and alive
 	 */
 	public static void clearWorld() {
-		
+		population.clear();
+		babies.clear();
 	}
 	
 	public static void worldTimeStep() {
