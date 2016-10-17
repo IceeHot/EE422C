@@ -51,6 +51,7 @@ public abstract class Critter {
 	 */
 	protected final void walk(int direction) {
 		move(direction, 1);
+		this.energy-= Params.walk_energy_cost;
 	}
 	
 	/* 
@@ -59,6 +60,7 @@ public abstract class Critter {
 	 */
 	protected final void run(int direction) {
 		move(direction, 2);
+		this.energy-= Params.run_energy_cost;
 	}
 	
 	/**

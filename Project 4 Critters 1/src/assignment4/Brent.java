@@ -21,15 +21,13 @@ public class Brent extends Critter {
 	@Override
 	public String toString() { return "B"; }
 	
-	private static final int GENE_TOTAL = 48;
+	private static final int GENE_TOTAL = 24;
 	private int[] genes = new int[8];
 	private int dir;
 	
 	public Brent() {
-		for (int k = 0; k < 8; k += 1) {
-			genes[k] = GENE_TOTAL / 8;
-		}
-		dir = Critter.getRandomInt(8);
+		for (int k = 0; k < 8; k += 1) { genes[k] = GENE_TOTAL / 8; }
+		dir = Critter.getRandomInt(5);
 	}
 	
 	public boolean fight(String not_used) { return true; }
@@ -63,7 +61,7 @@ public class Brent extends Critter {
 		}
 		assert(turn < 8);
 		
-		dir = (dir + turn) % 8;
+		dir = (dir + turn) % 5;
 	}
 
 	public static void runStats(java.util.List<Critter> brents) {
