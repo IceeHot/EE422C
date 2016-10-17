@@ -46,6 +46,7 @@ public abstract class Critter {
 	private int y_coord;
 	
 	private boolean hasMoved;
+	private boolean fighting;
 	
 	/* 
 	 * Walks in given direction
@@ -70,7 +71,44 @@ public abstract class Critter {
 	 * @param direction to move in
 	 * @param steps to take
 	 */
-	protected final void move(int direction, int steps) {
+	private void move(int direction, int steps) {
+		
+		int x = this.x_coord;
+		int y = this.y_coord;
+		
+		/* Is fighting, need to check if space is occupied */
+		if (fighting) {
+			switch (direction) {
+				case 0: 	x += steps;
+							break;
+				case 1:    	x += steps;
+							y += steps;
+							break;
+				case 2: 	y += steps;
+							break;
+				case 3: 	x -= steps;
+							y += steps;
+							break;
+				case 4: 	x -= steps;
+							break;
+				case 5: 	x -= steps;
+							y -= steps;
+							break;
+				case 6: 	y -= steps;
+							break;
+				case 7: 	x += steps;
+							y -= steps;
+							break;
+				default:	break;
+			}
+			
+			/* Check new coordinates for occupation */
+			for (Critter c : population) {
+				if (x == c.x_coord && y == c.y_coord) {
+					if (c.energy > 0) { return; }
+				}
+			}
+		}
 		
 		/* Update coordinates */
 		switch (direction) {
@@ -276,31 +314,66 @@ public abstract class Critter {
 	}
 	
 	public static void worldTimeStep() {
+		
+		/* Every critter takes a step */
 		for (Critter ls: population) { ls.doTimeStep(); }
 		
-		for (int i = 0; i< population.size();i++) {
+		/* Check for overlapping critters */
+		for (int i = 0; i< population.size(); i++) {
+			
+			/* First critter */
 			Critter count = population.get(i);
+			
+			/* Critter is dead, will remove later */
 			if (count.energy <= 0) { continue; }
+			
+			/* Second critter loop */
 			for (int j = i + 1; j < population.size(); j++) {
+				
+				/* Critter is dead, will remove later */
 				if (count.energy <= 0) { break; }
+				
+				/* Second critter */
 				Critter chk = population.get(j);
-				if (chk.energy<=0){ continue; }
+				
+				/* Second critter is dead */
+				if (chk.energy <= 0){ continue; }
+				
+				/* Two critters occupy the same space */
 				if (count.x_coord == chk.x_coord && count.y_coord == chk.y_coord) {
+					
+					/* Set fighting booleans */
+					count.fighting = true;
+					chk.fighting = true;
+					
+					/* See if critters want to fight */
 					boolean a = count.fight(chk.toString());
 					boolean b = chk.fight(count.toString());
-					if (a && b) {
-						if (count.energy >= 0 && chk.energy >= 0) {
-							if (count.x_coord == chk.x_coord && count.y_coord == chk.y_coord) {
-								int randcount = Critter.getRandomInt(count.energy + 1);
-								int randchk = Critter.getRandomInt(chk.energy + 1);
-								if(randchk > randcount) {
-									chk.energy += count.energy / 2;
-									count.energy = 0;
-								}
-								else {
-									count.energy += chk.energy / 2;
-									chk.energy = 0;
-								}
+					
+					/* Reset fighting booleans */
+					count.fighting = false;
+					chk.fighting = false;
+					
+					/* Check if both critters are still alive */
+					if (count.energy >= 0 && chk.energy >= 0) {
+						
+						/* Check if both critters still occupy the same space */
+						if (count.x_coord == chk.x_coord && count.y_coord == chk.y_coord) {
+							
+							/* Roll strengths */
+							int randcount = 0;
+							if (a) { randcount = Critter.getRandomInt(count.energy + 1); }
+							int randchk = 0;
+							if (b) { randchk = Critter.getRandomInt(chk.energy + 1); }
+							
+							/* See who won */
+							if (randchk > randcount) {
+								chk.energy += count.energy / 2;
+								count.energy = 0;
+							}
+							else {
+								count.energy += chk.energy / 2;
+								chk.energy = 0;
 							}
 						}
 					}
@@ -314,7 +387,8 @@ public abstract class Critter {
 		
 		/* Remove dead critters */
 		for (Critter alive : population){
-			if(alive.energy - Params.rest_energy_cost <= 0){
+			alive.energy-=Params.rest_energy_cost;
+			if(alive.energy  <= 0){
 				population.remove(alive);
 			}
 		}

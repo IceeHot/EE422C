@@ -1,7 +1,7 @@
 /* 
  * CRITTERS Dhruv.java
  * EE422C Project 4 submission by
- * Dhruv Atchison
+ * Brent Atchison
  * bma862
  * 16455
  * Dhruv Mathew

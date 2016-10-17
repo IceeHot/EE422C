@@ -1,7 +1,7 @@
 /* 
  * CRITTERS Mathew.java
  * EE422C Project 4 submission by
- * Mathew Atchison
+ * Brent Atchison
  * bma862
  * 16455
  * Mathew Mathew

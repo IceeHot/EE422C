@@ -27,7 +27,7 @@ public class Atchison extends Critter {
 	@Override
 	public void doTimeStep() {
 		
-		/* Take one step forward */
+		/* Take two steps forward */
 		run(dir);
 		
 		/* Check if able to reproduce */
