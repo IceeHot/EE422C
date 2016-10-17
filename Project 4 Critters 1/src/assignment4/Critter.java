@@ -152,8 +152,8 @@ public abstract class Critter {
 			
 			/* Initialize new critter values */
 			newcrit.energy =Params.start_energy;
-			newcrit.x_coord =Critter.getRandomInt(Params.world_width-1);
-			newcrit.y_coord=Critter.getRandomInt(Params.world_height-1);
+			newcrit.x_coord =Critter.getRandomInt(Params.world_width);
+			newcrit.y_coord=Critter.getRandomInt(Params.world_height);
 			
 		}
 		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e){

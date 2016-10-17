@@ -14,12 +14,7 @@
 package assignment4;
 import java.util.*;
 
-import assignment4.Critter.TestCritter;
-
 public class Input {
-	
-	private static String myPackage;
-	static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 	
 	/**
 	 * Take input and process commands accordingly
@@ -42,13 +37,13 @@ public class Input {
 				/* Command is quit */
 				if (input[0].equals("quit")) { 
 					if (input.length == 1) { System.exit(0); }
-					else { printInvalid(input); }
+					else { printError(input); }
 				}
 				
 				/* Command is show */
 				else if (input[0].equals("show")) {
 					if (input.length == 1) { Critter.displayWorld(); }
-					else { printInvalid(input); }
+					else { printError(input); }
 				}
 				
 				/* Command is step */
@@ -73,7 +68,7 @@ public class Input {
 					else if (input.length == 1) { Critter.worldTimeStep(); }
 					
 					/* Invalid input length */
-					else { printInvalid(input); }
+					else { printError(input); }
 				}
 				
 				/* Command is seed */
