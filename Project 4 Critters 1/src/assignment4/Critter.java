@@ -292,8 +292,15 @@ public abstract class Critter {
 	private static void printMiddle() {
 		for (int i = 0; i < Params.world_height; i++) {
 			System.out.print("|");
-			for (int k = 0; k < Params.world_width; k++) {
-				System.out.print(" ");
+			for (int j = 0; j < Params.world_width; j++) {
+				if (population.size() > 0) {
+					for (int k = 0; k < population.size(); k++) {
+						if (population.get(k).x_coord == j && population.get(k).y_coord == i) {
+							System.out.print(population.get(k).toString());
+							break;
+						} else { System.out.print(" "); }
+					}
+				} else { System.out.print(" "); }
 			}
 			System.out.println("|");
 		}
