@@ -121,30 +121,12 @@ public class Input {
 					
 					/* Check for name after make */
 					if (input.length == 2) {
-						
-						try { TestCritter c = (TestCritter) Class.forName(myPackage + "." + input[1]).newInstance(); }
-						catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-							try { throw new InvalidCritterException(input[1]); }
-							catch (InvalidCritterException e1) { e1.printStackTrace(); }
-						}
-						
-						/* Give stats on Craig */
-						if (input[1].equals("Craig")) {
-							try { Craig.runStats(Critter.getInstances(input[1])); }
-							catch (InvalidCritterException e) { printError(input); }
-						}
-						
-						/* Give stats on Algae */
-						else if (input[1].equals("Algae")) {
-							try { Algae.runStats(Critter.getInstances(input[1])); }
-							catch (InvalidCritterException e) { printError(input); }
-						}
-						
-						/* Input class not Craig or Algae */
-						else { printError(input); }
-					
+						try { Critter.runStats(Critter.getInstances(input[1])); }
+						catch (InvalidCritterException e) { printError(input); }
+					}
+
 					/* Invalid input length */
-					} else { printError(input); }
+					else { printError(input); }
 					
 				/* Invalid command */
 				} else { printInvalid(input); }
