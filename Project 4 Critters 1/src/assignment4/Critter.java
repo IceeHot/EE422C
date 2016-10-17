@@ -72,7 +72,7 @@ public abstract class Critter {
 		switch (direction) {
 			case 0: 	this.x_coord += steps;
 						break;
-			case 1: 	this.x_coord += steps;
+			case 1:    	this.x_coord += steps;
 						this.y_coord += steps;
 						break;
 			case 2: 	this.y_coord += steps;
@@ -93,8 +93,20 @@ public abstract class Critter {
 			default:	break;
 		}
 		
-		/* Check for world wrapping */
-		
+		if(this.x_coord>=Params.world_width){
+			this.x_coord-=Params.world_width;
+		}
+		if(this.x_coord<0){
+			this.x_coord+=Params.world_width;
+		}
+		if(this.y_coord>=Params.world_height){
+			this.y_coord-=Params.world_height;
+		}
+		if(this.y_coord<0){
+			this.y_coord+=Params.world_height;
+			
+			
+		}
 		
 	}
 	
@@ -144,13 +156,13 @@ public abstract class Critter {
 		try{
 			
 			/* Create new critter */
-			TestCritter newcrit = (TestCritter)  Class.forName(myPackage+ "." + critterClass).newInstance();
+			Critter newcrit = (Critter) Class.forName(myPackage+"."+critterClass).newInstance();
 			Critter.population.add(newcrit);
 			
 			/* Initialize new critter values */
-			newcrit.setEnergy(Params.start_energy);
-			newcrit.setX_coord(Critter.getRandomInt(Params.world_width-1));
-			newcrit.setY_coord(Critter.getRandomInt(Params.world_height-1));
+			newcrit.energy =Params.start_energy;
+			newcrit.x_coord =Critter.getRandomInt(Params.world_width-1);
+			newcrit.y_coord=Critter.getRandomInt(Params.world_height-1);
 			
 		}
 		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e){
@@ -290,17 +302,19 @@ public abstract class Critter {
 	 * Fills in middle of world
 	 */
 	private static void printMiddle() {
+		boolean found = false;
 		for (int i = 0; i < Params.world_height; i++) {
 			System.out.print("|");
 			for (int j = 0; j < Params.world_width; j++) {
-				if (population.size() > 0) {
-					for (int k = 0; k < population.size(); k++) {
-						if (population.get(k).x_coord == j && population.get(k).y_coord == i) {
-							System.out.print(population.get(k).toString());
-							break;
-						} else { System.out.print(" "); }
+				for (int k = 0; k < population.size(); k++) {
+					if (population.get(k).x_coord == j && population.get(k).y_coord == i) {
+						System.out.print(population.get(k).toString());
+						found = true;
+						break;
 					}
-				} else { System.out.print(" "); }
+				}
+				if (!found) { System.out.print(" "); }
+				else { found = false; }
 			}
 			System.out.println("|");
 		}
