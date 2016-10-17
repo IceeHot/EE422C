@@ -83,7 +83,7 @@ public class A4SampleTest{
 			e.printStackTrace();
 		}
 		String text = scanner.useDelimiter("\\A").next().trim();
-		String output =outContent.toString().replace("critter>","").trim();
+		String output =outContent.toString().replace("critters>","").trim();
 		scanner.close();
 		
 		assertEquals(text,output);
@@ -133,7 +133,7 @@ public class A4SampleTest{
 			e.printStackTrace();
 		}
 		String text = scanner.useDelimiter("\\A").next().trim();
-		String output = outContent.toString().replace("critter>","").trim();
+		String output = outContent.toString().replace("critters>","").trim();
 		scanner.close();
 		assertThat(text, containsString(output));
 		
