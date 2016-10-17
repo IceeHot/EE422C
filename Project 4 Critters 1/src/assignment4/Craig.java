@@ -1,21 +1,5 @@
-/* 
- * CRITTERS Craig.java
- * EE422C Project 4 submission by
- * Brent Atchison
- * bma862
- * 16455
- * Dhruv Mathew
- * dkm989
- * 16455
- * Slip days used: <0>
- * Fall 2016
- */
-
 package assignment4;
 
-/*
- * Example critter
- */
 public class Craig extends Critter {
 	
 	@Override
@@ -54,7 +38,7 @@ public class Craig extends Critter {
 			reproduce(child, Critter.getRandomInt(8));
 		}
 		
-		/* Pick a new direction based on our genes */
+		/* pick a new direction based on our genes */
 		int roll = Critter.getRandomInt(GENE_TOTAL);
 		int turn = 0;
 		while (genes[turn] <= roll) {

@@ -386,10 +386,10 @@ public abstract class Critter {
 		babies.clear();
 		
 		/* Remove dead critters */
-		for (Critter alive : population){
-			alive.energy-=Params.rest_energy_cost;
-			if(alive.energy  <= 0){
-				population.remove(alive);
+		for (int i = 0; i < population.size(); i++){
+			population.get(i).energy -= Params.rest_energy_cost;
+			if(population.get(i).energy  <= 0){
+				population.remove(population.get(i));
 			}
 		}
 		
