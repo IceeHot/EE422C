@@ -23,7 +23,7 @@ public class Atchison extends Critter {
 	public Atchison() { dir = Critter.getRandomInt(5) + 3; }
 	
 	@Override
-	public String toString() { return "B"; }
+	public String toString() { return "A"; }
 	
 	public boolean fight(String not_used) { return Critter.getRandomInt(2) > 0; }
 
