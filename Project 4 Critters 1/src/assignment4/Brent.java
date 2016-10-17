@@ -18,45 +18,28 @@ package assignment4;
  */
 public class Brent extends Critter {
 	
+	private int dir;
+	
+	public Brent() { dir = Critter.getRandomInt(5); }
+	
 	@Override
 	public String toString() { return "B"; }
 	
-	private static final int GENE_TOTAL = 24;
-	private int[] genes = new int[8];
-	private int dir;
-	
-	public Brent() {
-		for (int k = 0; k < 8; k += 1) { genes[k] = GENE_TOTAL / 8; }
-		dir = Critter.getRandomInt(5);
-	}
-	
-	public boolean fight(String not_used) { return false; }
+	public boolean fight(String not_used) { return Critter.getRandomInt(2) > 0; }
 
 	@Override
 	public void doTimeStep() {
-		/* take one step forward */
+		
+		/* Take one step forward */
 		walk(dir);
 		
-		if (getEnergy() > 150) {
+		/* Check if able to reproduce */
+		if (getEnergy() > 100) {
 			Brent child = new Brent();
-			for (int k = 0; k < 8; k += 1) { child.genes[k] = this.genes[k]; }
-			int g = Critter.getRandomInt(8);
-			while (child.genes[g] == 0) { g = Critter.getRandomInt(8); }
-			child.genes[g] -= 1;
-			g = Critter.getRandomInt(5);
-			child.genes[g] += 1;
 			reproduce(child, Critter.getRandomInt(5));
 		}
 		
-		/* Pick a new direction based on our genes */
-		int roll = Critter.getRandomInt(GENE_TOTAL);
-		int turn = 0;
-		while (genes[turn] <= roll) {
-			roll = roll - genes[turn];
-			turn = turn + 1;
-		}
-		assert(turn < 8);
-		
-		dir = (dir + turn) % 5;
+		/* Update direction */
+		dir = Critter.getRandomInt(5);
 	}
 }
