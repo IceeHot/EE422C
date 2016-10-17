@@ -47,20 +47,18 @@ public abstract class Critter {
 	
 	/* 
 	 * Walks in given direction
-	 * Still need to check world wrapping
 	 */
 	protected final void walk(int direction) {
+		this.energy -= Params.walk_energy_cost;
 		move(direction, 1);
-		this.energy-= Params.walk_energy_cost;
 	}
 	
 	/* 
 	 * Runs in given direction
-	 * Still need to check world wrapping
 	 */
 	protected final void run(int direction) {
+		this.energy -= Params.run_energy_cost;
 		move(direction, 2);
-		this.energy-= Params.run_energy_cost;
 	}
 	
 	/**
@@ -95,20 +93,11 @@ public abstract class Critter {
 			default:	break;
 		}
 		
-		if(this.x_coord>=Params.world_width){
-			this.x_coord-=Params.world_width;
-		}
-		if(this.x_coord<0){
-			this.x_coord+=Params.world_width;
-		}
-		if(this.y_coord>=Params.world_height){
-			this.y_coord-=Params.world_height;
-		}
-		if(this.y_coord<0){
-			this.y_coord+=Params.world_height;
-			
-			
-		}
+		/* Check world wrapping */
+		if(this.x_coord < 0){ this.x_coord += Params.world_width; }
+		if(this.x_coord >= Params.world_width){ this.x_coord -= Params.world_width; }
+		if(this.y_coord < 0){ this.y_coord += Params.world_height; }
+		if(this.y_coord >= Params.world_height){ this.y_coord -= Params.world_height; }
 		
 	}
 	
