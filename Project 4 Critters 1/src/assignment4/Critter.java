@@ -200,7 +200,7 @@ public abstract class Critter {
 			newcrit.y_coord = Critter.getRandomInt(Params.world_height);
 			
 		}
-		catch(InstantiationException | IllegalAccessException |ClassNotFoundException e){
+		catch(InstantiationException | IllegalAccessException | ClassNotFoundException e){
 			throw new InvalidCritterException(critterClass); }
 	}
 	
@@ -313,13 +313,16 @@ public abstract class Critter {
 		babies.clear();
 	}
 	
+	/**
+	 * Move the world forward in time
+	 */
 	public static void worldTimeStep() {
 		
 		/* Every critter takes a step */
-		for (Critter ls: population) { ls.doTimeStep(); }
+		for (Critter ls : population) { ls.doTimeStep(); }
 		
 		/* Check for overlapping critters */
-		for (int i = 0; i< population.size(); i++) {
+		for (int i = 0; i < population.size(); i++) {
 			
 			/* First critter */
 			Critter count = population.get(i);
@@ -399,6 +402,9 @@ public abstract class Critter {
 		}
 	}
 	
+	/**
+	 * Display entire world
+	 */
 	public static void displayWorld() {
 		printEdge();
 		printMiddle();

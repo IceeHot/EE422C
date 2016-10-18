@@ -20,6 +20,7 @@ public class Input {
 	 * Take input and process commands accordingly
 	 * 
 	 * @param kb is input scanner
+	 * @throws InvalidCritterException 
 	 */
 	public static void takeInput(Scanner kb) {
 		
@@ -103,7 +104,7 @@ public class Input {
 						/* Initialize critters */
 						for (int i = 0; i < count; i++) {
 							try { Critter.makeCritter(input[1]); }
-							catch (InvalidCritterException e) { printError(input); break; }
+							catch (InvalidCritterException e) { System.out.println(e.toString()); }
 						}
 
 					/* Invalid input length */
@@ -117,7 +118,7 @@ public class Input {
 					/* Check for name after stats */
 					if (input.length == 2) {
 						try { Critter.runStats(Critter.getInstances(input[1])); }
-						catch (InvalidCritterException e) { printError(input); }
+						catch (InvalidCritterException e) { System.out.println(e.toString()); }
 					}
 
 					/* Invalid input length */
