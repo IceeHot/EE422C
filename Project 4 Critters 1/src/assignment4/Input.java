@@ -104,7 +104,7 @@ public class Input {
 						/* Initialize critters */
 						for (int i = 0; i < count; i++) {
 							try { Critter.makeCritter(input[1]); }
-							catch (InvalidCritterException e) { System.out.println(e.toString()); break; }
+							catch (InvalidCritterException e) { printError(input); break; }
 						}
 
 					/* Invalid input length */
