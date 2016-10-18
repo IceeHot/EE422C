@@ -189,7 +189,7 @@ public abstract class Critter {
 		try{
 			
 			/* Create new critter */
-			Critter newcrit = (Critter) Class.forName(myPackage+"."+critterClass).newInstance();
+			Critter newcrit = (Critter) Class.forName(myPackage+"." + critterClass).newInstance();
 			Critter.population.add(newcrit);
 			
 			/* Initialize new critter values */
@@ -385,21 +385,22 @@ public abstract class Critter {
 		}
 		
 		/* Add all babies to population */
-		for (Critter b : babies){ population.add(b); }
+		for (Critter b : babies) { population.add(b); }
 		babies.clear();
 		
-		/* Remove dead critters */
-		for (int i = 0; i < population.size(); i++){
+		/* Check for dead critters */
+		for (int i = 0; i < population.size(); i++) {
+			
+			/* Subtract rest energy cost */
 			population.get(i).energy -= Params.rest_energy_cost;
-			if(population.get(i).energy  <= 0){
-				population.remove(population.get(i));
-			}
+			
+			/* Remove dead critters */
+			if(population.get(i).energy <= 0) { population.remove(population.get(i)); }
+			
 		}
 		
 		/* Reset movement */
-		for (Critter c : population) {
-			c.hasMoved = false;
-		}
+		for (Critter c : population) { c.hasMoved = false; }
 	}
 	
 	/**

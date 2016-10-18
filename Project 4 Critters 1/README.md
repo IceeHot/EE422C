@@ -32,6 +32,8 @@ These instructions will get you a copy of the project up and running on your loc
   * Methods:
     * main(String[]) : void
 * Input.java
+  * Fields:
+    * myPackage : String
   * Methods:
     * takeInput(Scanner) : void
     * printError(String[]) : void

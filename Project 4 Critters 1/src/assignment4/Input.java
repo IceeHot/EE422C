@@ -15,6 +15,9 @@ package assignment4;
 import java.util.*;
 
 public class Input {
+
+	private static String myPackage;
+	static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 	
 	/**
 	 * Take input and process commands accordingly
@@ -116,13 +119,11 @@ public class Input {
 				else if (input[0].equals("stats")) {
 					
 					/* Check for name after stats */
-					if (input.length == 2) {
-						try { Critter.runStats(Critter.getInstances(input[1])); }
-						catch (InvalidCritterException e) { printError(input); }
-					}
-
-					/* Invalid input length */
-					else { printError(input); }
+					if (input.length != 2) { printError(input); continue; }
+					
+					/* The killer one-liner */
+					try { Class.forName(myPackage + "." + input[1]).getMethod("runStats", List.class).invoke(input[1], Critter.getInstances(input[1])); }
+					catch (Exception e) { printError(input); }
 					
 				/* Invalid command */
 				} else { printInvalid(input); }
@@ -141,8 +142,8 @@ public class Input {
 	 */
 	public static void printError(String[] input) {
 		System.out.print("error processing: ");
-		for (int i = 0; i < input.length; i++) {
-			System.out.print(input[i]);
+		for (int j = 0; j < input.length; j++) {
+			System.out.print(input[j]);
 			System.out.print(" ");
 		}
 		System.out.println();
