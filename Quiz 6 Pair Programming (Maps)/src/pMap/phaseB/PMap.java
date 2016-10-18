@@ -16,26 +16,28 @@ import java.util.Set;
 
 public class PMap implements Map<Integer,String> {
 
+	private int length;
+	
 	@Override
 	public int size() {
-		return 0;
+		return length;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
+		if (length == 0) { return true; }
 		return false;
 	}
 
 	@Override
 	public boolean containsKey(Object key) {
-		// TODO Auto-generated method stub
+		if (this.keySet().contains(key)) { return true; }
 		return false;
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		// TODO Auto-generated method stub
+		if (this.values().contains(value)) { return true; }
 		return false;
 	}
 
