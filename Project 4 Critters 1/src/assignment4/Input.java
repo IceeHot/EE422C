@@ -37,7 +37,7 @@ public class Input {
 				
 				/* Command is quit */
 				if (input[0].equals("quit")) { 
-					if (input.length == 1) { System.exit(0); }
+					if (input.length == 1) { break; }
 					else { printError(input); }
 				}
 				
