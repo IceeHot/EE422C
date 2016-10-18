@@ -118,7 +118,7 @@ public class Input {
 					/* Check for name after stats */
 					if (input.length == 2) {
 						try { Critter.runStats(Critter.getInstances(input[1])); }
-						catch (InvalidCritterException e) { System.out.println(e.toString()); }
+						catch (InvalidCritterException e) { printError(input); }
 					}
 
 					/* Invalid input length */
