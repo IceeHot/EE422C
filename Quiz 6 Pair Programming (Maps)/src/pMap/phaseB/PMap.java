@@ -6,6 +6,7 @@ package pMap.phaseB;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,12 +98,12 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public Set<Integer> keySet() {
-		return new TreeSet<Integer>(this.keys);
+		return new LinkedHashSet<Integer>(this.keys);
 	}
 
 	@Override
 	public Collection<String> values() {
-		return new TreeSet<String>(this.values);
+		return new LinkedHashSet<String>(this.values);
 	}
 
 	@Override
