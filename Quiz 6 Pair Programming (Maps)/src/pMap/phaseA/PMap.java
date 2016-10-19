@@ -54,29 +54,29 @@ public class PMap {
 	}
 
 	public int put(int key, int value) {
-		int returnval=0;
-		for(int i =0; i< length;i++){
-			if (keys[i]== key){
-				returnval =values[i];
-				values[i]=value;
-				map[i]= new Entry(key,value);
+		int returnval = 0;
+		for (int i = 0; i < length; i++) {
+			if (keys[i] == key) {
+				returnval = values[i];
+				values[i] = value;
+				map[i] = new Entry(key, value);
 			}
 		}
 		return returnval;
 	}
 
 	public int remove(int key) {
-		int removeval=0;
-		for(int i =0; i<length;i++){
-			if (keys[i]== key){
-				removeval =values[i];
-				for (int j =i;j< length-1;j++){
-					keys[j]=keys[j+1];
-					values[j]=values[j+1];
-					length -=1;
+		int removeval = 0;
+		for (int i = 0; i < length;i++) {
+			if (keys[i] == key){
+				removeval = values[i];
+				for (int j = i; j< length - 1; j++) {
+					keys[j] = keys[j + 1];
+					values[j] = values[j + 1];
+					length -= 1;
 				}
-				for (int k =0;k< length;k++){
-					this.map[k]=new Entry(keys[i],values[i]);
+				for (int k = 0; k < length; k++){
+					this.map[k] = new Entry(keys[i], values[i]);
 				}
 			}
 		}		

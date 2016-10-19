@@ -13,20 +13,25 @@ import java.util.Map;
 
 public class Entry implements Map.Entry<Integer,String> {
 	
-	@Override
+	private Integer key;
+	private String val;
+	
+	public Entry(Integer key, String value) {
+		this.key = key;
+		this.val = value;
+	}
+	
 	public Integer getKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.key;
 	}
-	@Override
+	
 	public String getValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.val;
 	}
-	@Override
+	
 	public String setValue(String value) {
-		// TODO Auto-generated method stub
-		return null;
+		this.val = value;
+		return value;
 	}
 
 

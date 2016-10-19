@@ -4,91 +4,114 @@
  */
 package pMap.phaseB;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * PMap stands for Paired Map. A map is a collection of key value pairs, e.g.,
  * (1, "one") (2, "two") (3, "three") are all pairs with a key that's a integer and a value
- * that's an string.
+ * that's a string.
  */
 
 public class PMap implements Map<Integer,String> {
-
-	private int length;
+	
+	private ArrayList<Integer> keys = new ArrayList<Integer>();
+	private ArrayList<String> values = new ArrayList<String>();
 	
 	@Override
 	public int size() {
-		return length;
+		return this.keys.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		if (length == 0) { return true; }
-		return false;
+		return this.keys.isEmpty();
 	}
 
 	@Override
 	public boolean containsKey(Object key) {
-		if (this.keySet().contains(key)) { return true; }
-		return false;
+		return this.keys.contains(key);
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		if (this.values().contains(value)) { return true; }
-		return false;
+		return this.values.contains(value);
 	}
 
 	@Override
 	public String get(Object key) {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < keys.size(); i++) {
+			if (keys.get(i).equals(key)) { return values.get(i); }
+		}
 		return null;
 	}
 
 	@Override
 	public String put(Integer key, String value) {
-		// TODO Auto-generated method stub
+		if (!keys.contains(key)) {
+			keys.add(key);
+			values.add(value);
+			return value;
+		}
 		return null;
 	}
 
 	@Override
 	public String remove(Object key) {
-		// TODO return value
-		return null;
+		String val = null;
+		if (keys.contains(key)) {
+			for (int i = 0; i < keys.size(); i++) {
+				if (keys.get(i).equals(key)) {
+					keys.remove(i);
+					val = values.remove(i);
+				}
+			}
+		}
+		return val;
 	}
 
 	@Override
 	public void putAll(Map<? extends Integer, ? extends String> m) {
-		// TODO Auto-generated method stub
-		
+		List<Integer> ints = new ArrayList<Integer>(m.keySet());
+		List<String> str = new ArrayList<String>(m.values());
+		for (int i = 0; i < ints.size(); i++) {
+			if (!keys.contains(ints.get(i))) {
+				keys.add(ints.get(i));
+				values.add(str.get(i));
+			}
+			else if (keys.contains(ints.get(i))) {
+				values.add(i, str.get(i));
+			}
+		}
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		this.keys.clear();
+		this.values.clear();
 	}
 
 	@Override
 	public Set<Integer> keySet() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Set<Integer>) this.keys;
 	}
 
 	@Override
 	public Collection<String> values() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Collection<String>) this.values;
 	}
 
 	@Override
 	public Set<Entry<Integer, String>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		Set<Entry<Integer, String>> set = new TreeSet<Entry<Integer, String>>();
+		for (int i = 0; i < keys.size(); i++) {
+			set.add(new Entry<Integer, String>(keys.get(i), values.get(i)));
+		}
+		return set;
 	}
-
 	
-
 }
