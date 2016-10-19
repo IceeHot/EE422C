@@ -97,12 +97,12 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public Set<Integer> keySet() {
-		return (Set<Integer>) this.keys;
+		return new TreeSet<Integer>(this.keys);
 	}
 
 	@Override
 	public Collection<String> values() {
-		return (Collection<String>) this.values;
+		return new TreeSet<String>(this.values);
 	}
 
 	@Override
