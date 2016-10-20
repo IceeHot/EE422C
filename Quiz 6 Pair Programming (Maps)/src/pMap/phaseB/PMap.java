@@ -20,56 +20,65 @@ import java.util.TreeSet;
 
 public class PMap implements Map<Integer,String> {
 	
+	private Set<Entry<Integer, String>> set = new LinkedHashSet<Entry<Integer, String>>();
+	
 	private ArrayList<Integer> keys = new ArrayList<Integer>();
 	private ArrayList<String> values = new ArrayList<String>();
 	
 	@Override
 	public int size() {
-		return this.keys.size();
+		return this.set.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return this.keys.isEmpty();
+		return this.set.isEmpty();
 	}
 
 	@Override
 	public boolean containsKey(Object key) {
-		return this.keys.contains(key);
+		for (Entry<Integer, String> n : set) {
+			if (n.getKey().equals(key)) { return true; }
+		}
+		return false;
 	}
 
 	@Override
 	public boolean containsValue(Object value) {
-		return this.values.contains(value);
+		for (Entry<Integer, String> n : set) {
+			if (n.getValue().equals(value)) { return true; }
+		}
+		return false;
 	}
 
 	@Override
 	public String get(Object key) {
-		for (int i = 0; i < keys.size(); i++) {
-			if (keys.get(i).equals(key)) { return values.get(i); }
+		for (Entry<Integer, String> n : set) {
+			if (n.getKey().equals(key)) { return n.getValue(); }
 		}
 		return null;
 	}
 
 	@Override
 	public String put(Integer key, String value) {
-		if (!keys.contains(key)) {
-			keys.add(key);
-			values.add(value);
-			return value;
+		for (Entry<Integer, String> n : set) {
+			if (n.getKey().equals(key)) {
+				n.setValue(value);
+				return value;
+			}
 		}
-		return null;
+		set.add(new pMap.phaseB.Entry(key, value));
+		return value;
 	}
 
 	@Override
 	public String remove(Object key) {
 		String val = null;
-		if (keys.contains(key)) {
-			for (int i = 0; i < keys.size(); i++) {
-				if (keys.get(i).equals(key)) {
-					keys.remove(i);
-					val = values.remove(i);
-				}
+		for (Entry<Integer, String> n : set) {
+			if (n.getKey().equals(key)) {
+				val = n.getValue();
+				set.remove(n);
+				break;
 			}
 		}
 		return val;
@@ -79,6 +88,9 @@ public class PMap implements Map<Integer,String> {
 	public void putAll(Map<? extends Integer, ? extends String> m) {
 		List<Integer> ints = new ArrayList<Integer>(m.keySet());
 		List<String> str = new ArrayList<String>(m.values());
+		for (Entry<Integer, String> n : set) {
+			
+		}
 		for (int i = 0; i < ints.size(); i++) {
 			if (!keys.contains(ints.get(i))) {
 				keys.add(ints.get(i));
@@ -110,7 +122,7 @@ public class PMap implements Map<Integer,String> {
 	public Set<Entry<Integer, String>> entrySet() {
 		Set<Entry<Integer, String>> set = new TreeSet<Entry<Integer, String>>();
 		for (int i = 0; i < keys.size(); i++) {
-			set.add(new Entry<Integer, String>(keys.get(i), values.get(i)));
+			set.add(new pMap.phaseB.Entry(keys.get(i), values.get(i)));
 		}
 		return set;
 	}

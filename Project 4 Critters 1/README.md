@@ -134,6 +134,31 @@ These instructions will get you a copy of the project up and running on your loc
     * InvalidCritterException(String)
     * toString() : String
 
+##Critter Object
+
+* Fields:
+  * population : ArrayList<Critter>()
+  * babies : List<Critter>
+  * energy : int
+  * x_coord : int
+  * y_coord : int
+  * hasMoved : boolean
+  * fighting : boolean
+* Methods:
+  * getRandomInt(int) : int
+  * setSeed(long) : void
+  * toString() : String
+  * getEnergy() : int
+  * walk(int) : void
+  * run(int) : void
+  * move(int, int) : void
+  * reproduce(Critter, int) : void
+  * doTimeStep() : void
+  * fight(String) : boolean
+  * makeCritter(String) : void
+  * getInstances(String) : List<Critter>
+  * runStats(List<Critter>) : void
+
 ##Authors
 
 * Brent Atchison
