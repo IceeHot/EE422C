@@ -22,9 +22,6 @@ public class PMap implements Map<Integer,String> {
 	
 	private Set<Entry<Integer, String>> set = new LinkedHashSet<Entry<Integer, String>>();
 	
-	private ArrayList<Integer> keys = new ArrayList<Integer>();
-	private ArrayList<String> values = new ArrayList<String>();
-	
 	@Override
 	public int size() {
 		return this.set.size();
