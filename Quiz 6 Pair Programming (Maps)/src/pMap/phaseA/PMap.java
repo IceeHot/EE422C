@@ -13,14 +13,15 @@ package pMap.phaseA;
 public class PMap {
 	
 	private Entry[] map = new Entry[1000];
+	private int length = 0;
 
-	public int size() { return map.length; }
+	public int size() { return length; }
 
-	public boolean isEmpty() { return map.length == 0; }
+	public boolean isEmpty() { return length == 0; }
 
 	public boolean containsKey(int key) {
-		for (int i = 0; i < map.length; i++) {
-			if (this.map[i].getkey() == key) {
+		for (int i = 0; i < length; i++) {
+			if (map[i].getkey() == key) {
 				return true;
 			}
 		}
@@ -28,8 +29,8 @@ public class PMap {
 	}
 
 	public boolean containsValue(int value) {
-		for (int i = 0; i < map.length; i++) {
-			if (this.map[i].getval() == value) {
+		for (int i = 0; i < length; i++) {
+			if (map[i].getval() == value) {
 				return true;
 			}
 		}
@@ -37,45 +38,49 @@ public class PMap {
 	}
 
 	public int get(int key) {
-		for (int i = 0; i < map.length; i++) {
-			if (this.map[i].getkey() == key) {
-				return this.map[i].getval();
+		for (int i = 0; i < length; i++) {
+			if (map[i].getkey() == key) {
+				return map[i].getval();
 			}
 		}
 		return 0;
 	}
 
 	public int put(int key, int value) {
-		int index = 0;
-		boolean found = false;
-		if (!this.isEmpty()) {
-			for (index = 0; index < map.length; index++) {
-				if (this.map[index].getkey() == key) {
-					found = true;
-					break;
-				}
+		if (!containsKey(key)) {
+			map[length] = new Entry(key, value);
+			length++;
+			return value;
+		}
+		for(int i = 0; i < length; i++) {
+			if (map[i].getkey() == key) {
+				int j = map[i].getval();
+				map[i].setval(value);
+				return j;
 			}
 		}
-		if (!found) { return 0; }
-		this.map[index].setkey(key);
-		this.map[index].setval(value);
-		return value;
+		return 0;
 	}
 
 	public int remove(int key) {
 		int retval = 0;
+		
 		if (!this.containsKey(key)) { return retval; }
+		/*
+		if (length == 1) {
+			retval = map[retval].getval();
+			length--;
+			return retval;
+		}*/
 		
-		Entry[] newMap = new Entry[1000];
-		
-		for (int i = 0; i < map.length - 1; i++) {
+		for (int i = 0; i < length; i++) {
 			if (map[i].getkey() == key) {
 				retval = map[i].getval();
-				i++;
+				map[i] = map[length - 1];
+				length--;
+				return retval;
 			}
-			newMap[i] = map[i];
 		}
-		map = newMap;
 		return retval;
 	}
 
@@ -86,27 +91,28 @@ public class PMap {
 	}
 
 	public void clear() {
-		this.map = new Entry[1000];
+		map = new Entry[1000];
+		length = 0;
 	}
 
 	public int[] keys() {
-		int[] ints = new int[1000];
-		for (int i = 0; i < map.length; i++) {
-			ints[i] = this.map[i].getkey();
+		int[] ints = new int[length];
+		for (int i = 0; i < length; i++) {
+			ints[i] = map[i].getkey();
 		}
 		return ints;
 	}
 
 	public int[] values() {
-		int[] vals = new int[1000];
-		for (int i = 0; i < map.length; i++) {
-			vals[i] = this.map[i].getkey();
+		int[] vals = new int[length];
+		for (int i = 0; i < length; i++) {
+			vals[i] = map[i].getkey();
 		}
 		return vals;
 	}
 
 	public Entry[] entrys() {
-		return this.map;
+		return map;
 	}
 
 }
