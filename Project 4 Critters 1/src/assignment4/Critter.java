@@ -105,7 +105,7 @@ public abstract class Critter {
 			/* Check new coordinates for occupation */
 			for (Critter c : population) {
 				if (x == c.x_coord && y == c.y_coord) {
-					if (c.energy > 0) { return; }
+					return;
 				}
 			}
 		}
