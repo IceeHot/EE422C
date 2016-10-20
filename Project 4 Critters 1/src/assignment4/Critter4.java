@@ -12,6 +12,12 @@
  */
 
 package assignment4;
+/**
+ * Critter4 is a type of critter that only moves westwards
+ * It always choose to fight unless it is fighting Critter1
+ * it reproduces when it has more than a 150 energy
+
+ */
 
 /*
  * Example critter
@@ -28,9 +34,18 @@ public class Critter4 extends Critter {
 		
 		dir = 3+ Critter.getRandomInt(3);
 	}
-	
-	public boolean fight(String not_used) { return true; }
-
+	/** fight method
+     * @param String not_used 
+     * @return boolean which indicates how critter will handle conflict
+     */
+	public boolean fight(String not_used) { 
+		if(not_used.equals("1")){
+			return false ;
+		}
+		return true; }
+	/** do TimeStep method
+     *  
+     */
 	@Override
 	public void doTimeStep() {
 		/* take one step forward */

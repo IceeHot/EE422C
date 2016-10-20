@@ -82,22 +82,22 @@ public abstract class Critter {
 				case 0: 	x += steps;
 							break;
 				case 1:    	x += steps;
-							y += steps;
+							y -= steps;
 							break;
-				case 2: 	y += steps;
+				case 2: 	y -= steps;
 							break;
 				case 3: 	x -= steps;
-							y += steps;
+							y -= steps;
 							break;
 				case 4: 	x -= steps;
 							break;
 				case 5: 	x -= steps;
-							y -= steps;
+							y += steps;
 							break;
-				case 6: 	y -= steps;
+				case 6: 	y += steps;
 							break;
 				case 7: 	x += steps;
-							y -= steps;
+							y += steps;
 							break;
 				default:	break;
 			}
@@ -115,22 +115,22 @@ public abstract class Critter {
 			case 0: 	this.x_coord += steps;
 						break;
 			case 1:    	this.x_coord += steps;
-						this.y_coord += steps;
+						this.y_coord -= steps;
 						break;
-			case 2: 	this.y_coord += steps;
+			case 2: 	this.y_coord -= steps;
 						break;
 			case 3: 	this.x_coord -= steps;
-						this.y_coord += steps;
+						this.y_coord -= steps;
 						break;
 			case 4: 	this.x_coord -= steps;
 						break;
 			case 5: 	this.x_coord -= steps;
-						this.y_coord -= steps;
+						this.y_coord += steps;
 						break;
-			case 6: 	this.y_coord -= steps;
+			case 6: 	this.y_coord += steps;
 						break;
 			case 7: 	this.x_coord += steps;
-						this.y_coord -= steps;
+						this.y_coord += steps;
 						break;
 			default:	break;
 		}
@@ -383,19 +383,28 @@ public abstract class Critter {
 				}
 			}
 		}
+		for(int j=0;j<Params.refresh_algae_count;j++){
+			try{
+			makeCritter("Algae");}
+			catch(InvalidCritterException e){}
+		}
 		
 		/* Add all babies to population */
 		for (Critter b : babies) { population.add(b); }
 		babies.clear();
-		
+		int size = population.size();
+		int index=0;
 		/* Check for dead critters */
-		for (int i = 0; i < population.size(); i++) {
+		for (int i = 0; i < size; i++) {
 			
 			/* Subtract rest energy cost */
-			population.get(i).energy -= Params.rest_energy_cost;
+			population.get(index).energy -= Params.rest_energy_cost;
 			
 			/* Remove dead critters */
-			if(population.get(i).energy <= 0) { population.remove(population.get(i)); }
+			if(population.get(index).energy <= 0) { population.remove(population.get(index)); }
+			else{
+				index+=1;
+			}
 			
 		}
 		

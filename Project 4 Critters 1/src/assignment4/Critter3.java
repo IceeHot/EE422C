@@ -13,11 +13,16 @@
 
 package assignment4;
 
-/*
- * Example critter
+/**
+ * Critter3 is a type of critter that only moves in the east directions 
+ * It never fights choosing to walk instead
+ * it reproduces when it has more than a 75 energy
+
  */
 public class Critter3 extends Critter {
-	
+	/** toString method
+     * @return character to be printed
+     */
 	@Override
 	public String toString() { return "3"; }
 	
@@ -31,9 +36,15 @@ public class Critter3 extends Critter {
 			dir = 7;
 		}
 	}
+	/** fight method
+     * @param String not_used 
+     * @return boolean which indicates how critter will handle conflict
+     */
 	
 	public boolean fight(String not_used) { walk(dir);return false; }
-
+	/** do TimeStep method
+     *  
+     */
 	@Override
 	public void doTimeStep() {
 		/* take one step forward */

@@ -144,7 +144,9 @@ public class Input {
 		System.out.print("error processing: ");
 		for (int j = 0; j < input.length; j++) {
 			System.out.print(input[j]);
+			if(j!=input.length-1){
 			System.out.print(" ");
+			}
 		}
 		System.out.println();
 	}
@@ -158,7 +160,9 @@ public class Input {
 		System.out.print("invalid command: ");
 		for (int j = 0; j < input.length; j++) {
 			System.out.print(input[j]);
-			System.out.print(" ");
+			if(j!=input.length-1){
+				System.out.print(" ");
+				}
 		}
 		System.out.println();
 	}
