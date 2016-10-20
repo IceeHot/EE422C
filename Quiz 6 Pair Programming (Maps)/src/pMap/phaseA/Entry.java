@@ -1,6 +1,6 @@
 /**
- * Phase A <studentA EID><studentB EID>
- * Phase B <studentB EID><studentA EID>
+ * Phase A <dkm989><bma862>
+ * Phase B <bma862><dkm989>
  */
 
 package pMap.phaseA;
@@ -24,5 +24,13 @@ public class Entry {
 	
 	public int getval(){
 		return this.value;
+	}
+	
+	public void setkey(int key){
+		this.key = key;
+	}
+	
+	public void setval(int value){
+		this.value = value;
 	}
 }

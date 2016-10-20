@@ -1,6 +1,6 @@
 /**
- * Phase A <studentA EID><studentB EID>
- * Phase B <studentB EID><studentA EID>
+ * Phase A <dkm989><bma862>
+ * Phase B <bma862><dkm989>
  */
 
 package pMap.phaseB;
