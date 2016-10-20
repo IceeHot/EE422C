@@ -31,7 +31,7 @@ public class Critter1 extends Critter {
 		walk(dir);
 		
 		/* Check if able to reproduce */
-		if (getEnergy() > 100) {
+		if (getEnergy() > 200) {
 			Critter1 child = new Critter1();
 			reproduce(child, Critter.getRandomInt(5));
 		}

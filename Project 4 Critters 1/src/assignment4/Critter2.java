@@ -17,12 +17,12 @@ public class Critter2 extends Critter {
 	
 	private int dir;
 	
-	public Critter2() { dir = Critter.getRandomInt(5) + 3; }
+	public Critter2() { dir = Critter.getRandomInt(4) + 3; }
 	
 	@Override
 	public String toString() { return "2"; }
 	
-	public boolean fight(String not_used) { return Critter.getRandomInt(2) > 0; }
+	public boolean fight(String not_used) { return Critter.getRandomInt(3) > 0; }
 
 	@Override
 	public void doTimeStep() {
@@ -33,10 +33,10 @@ public class Critter2 extends Critter {
 		/* Check if able to reproduce */
 		if (getEnergy() > 100) {
 			Critter2 child = new Critter2();
-			reproduce(child, Critter.getRandomInt(5) + 3);
+			reproduce(child, Critter.getRandomInt(4) + 3);
 		}
 		
 		/* Update direction */
-		dir = Critter.getRandomInt(5) + 3;
+		dir = Critter.getRandomInt(4) + 3;
 	}
 }
