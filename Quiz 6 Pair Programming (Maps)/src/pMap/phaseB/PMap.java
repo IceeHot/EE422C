@@ -37,7 +37,7 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public boolean containsKey(Object key) {
-		for (Entry<Integer, String> n : set) {
+		for (Entry<Integer, String> n : this.set) {
 			if (n.getKey().equals(key)) { return true; }
 		}
 		return false;
@@ -45,7 +45,7 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public boolean containsValue(Object value) {
-		for (Entry<Integer, String> n : set) {
+		for (Entry<Integer, String> n : this.set) {
 			if (n.getValue().equals(value)) { return true; }
 		}
 		return false;
@@ -53,7 +53,7 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public String get(Object key) {
-		for (Entry<Integer, String> n : set) {
+		for (Entry<Integer, String> n : this.set) {
 			if (n.getKey().equals(key)) { return n.getValue(); }
 		}
 		return null;
@@ -61,23 +61,23 @@ public class PMap implements Map<Integer,String> {
 
 	@Override
 	public String put(Integer key, String value) {
-		for (Entry<Integer, String> n : set) {
+		for (Entry<Integer, String> n : this.set) {
 			if (n.getKey().equals(key)) {
 				n.setValue(value);
 				return value;
 			}
 		}
-		set.add(new pMap.phaseB.Entry(key, value));
+		this.set.add(new pMap.phaseB.Entry(key, value));
 		return value;
 	}
 
 	@Override
 	public String remove(Object key) {
 		String val = null;
-		for (Entry<Integer, String> n : set) {
+		for (Entry<Integer, String> n : this.set) {
 			if (n.getKey().equals(key)) {
 				val = n.getValue();
-				set.remove(n);
+				this.set.remove(n);
 				break;
 			}
 		}
@@ -87,44 +87,34 @@ public class PMap implements Map<Integer,String> {
 	@Override
 	public void putAll(Map<? extends Integer, ? extends String> m) {
 		List<Integer> ints = new ArrayList<Integer>(m.keySet());
-		List<String> str = new ArrayList<String>(m.values());
-		for (Entry<Integer, String> n : set) {
-			
-		}
+		List<String> vals = new ArrayList<String>(m.values());
 		for (int i = 0; i < ints.size(); i++) {
-			if (!keys.contains(ints.get(i))) {
-				keys.add(ints.get(i));
-				values.add(str.get(i));
-			}
-			else if (keys.contains(ints.get(i))) {
-				values.add(i, str.get(i));
-			}
+			this.put(ints.get(i), vals.get(i));
 		}
 	}
 
 	@Override
 	public void clear() {
-		this.keys.clear();
-		this.values.clear();
+		this.set.clear();
 	}
 
 	@Override
 	public Set<Integer> keySet() {
-		return new LinkedHashSet<Integer>(this.keys);
+		Set<Integer> ints = new LinkedHashSet<Integer>();
+		for (Entry<Integer, String> n : this.set) { ints.add(n.getKey()); }
+		return ints;
 	}
 
 	@Override
 	public Collection<String> values() {
-		return new LinkedHashSet<String>(this.values);
+		Collection<String> vals = new LinkedHashSet<String>();
+		for (Entry<Integer, String> n : this.set) { vals.add(n.getValue()); }
+		return vals;
 	}
 
 	@Override
 	public Set<Entry<Integer, String>> entrySet() {
-		Set<Entry<Integer, String>> set = new TreeSet<Entry<Integer, String>>();
-		for (int i = 0; i < keys.size(); i++) {
-			set.add(new pMap.phaseB.Entry(keys.get(i), values.get(i)));
-		}
-		return set;
+		return this.set;
 	}
 	
 }
