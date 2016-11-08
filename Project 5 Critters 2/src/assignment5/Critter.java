@@ -51,14 +51,71 @@ public abstract class Critter {
 	
 	public abstract CritterShape viewShape(); 
 	
+	public int getX(){
+		return this.x_coord;
+		
+	}
+	
+	public int getY(){
+		return this.y_coord;
+		
+	}
+	
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
+	private static int [] a = new int [population.size()*2];
 
 	/* Gets the package name.  Assumes that Critter and its subclasses are all in the same package. */
 	static { myPackage = Critter.class.getPackage().toString().split(" ")[1]; }
 	
-	protected String look(int direction, boolean steps) {return "";}
+	protected String look(int direction, boolean steps) {
+		int nsteps=1;
+		int x = this.x_coord;
+		int y =this.y_coord;
+		this.energy-=Params.look_energy_cost;
+		if(steps){
+			
+			nsteps=2;
+		}
+		switch (direction) {
+		case 0: 	x += nsteps;
+					break;
+		case 1:    	x += nsteps;
+					y -= nsteps;
+					break;
+		case 2: 	y -= nsteps;
+					break;
+		case 3: 	x -= nsteps;
+					y -= nsteps;
+					break;
+		case 4: 	x -= nsteps;
+					break;
+		case 5: 	x -= nsteps;
+					y += nsteps;
+					break;
+		case 6: 	y += nsteps;
+					break;
+		case 7: 	x += nsteps;
+					y += nsteps;
+					break;
+		default:	break;
+	} 
+		for (int i =0; i<a.length;i+=2){
+			if (a[i]==x && a[i+1]==y){
+				if(this.fighting && (population.get(i/2).energy<=0)){
+
+					continue;
+				}
+				return population.get(i/2).toString();
+			}
+		}
+		
+
+		return null;
+		
+		
+	}
 	
 	/* Returns a random integer */
 	private static java.util.Random rand = new java.util.Random();
@@ -97,6 +154,8 @@ public abstract class Critter {
 		if (!this.hasMoved) { move(direction, 2); }
 		this.hasMoved = true;
 	}
+	
+
 	
 	/**
 	 * Moves in given direction
@@ -167,11 +226,24 @@ public abstract class Critter {
 			default:	break;
 		}
 		
+		
 		/* Check world wrapping */
 		if(this.x_coord < 0){ this.x_coord += Params.world_width; }
 		if(this.x_coord >= Params.world_width){ this.x_coord -= Params.world_width; }
 		if(this.y_coord < 0){ this.y_coord += Params.world_height; }
 		if(this.y_coord >= Params.world_height){ this.y_coord -= Params.world_height; }
+		int count =0;
+		for(Critter ls: population){
+			if (this.equals(ls)){
+				a[2*count]=this.x_coord;
+				a[2*count +1] =this.y_coord;
+				
+				
+			}
+			
+			count+=1;
+		}
+		
 		
 	}
 	
@@ -243,6 +315,10 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
+		
+		if (critter_class_name.equals("Crittersgetter")){
+			return population;
+		}
 		
 		/* Initialize new critter */
 		Class<?> critter = null;
@@ -349,9 +425,26 @@ public abstract class Critter {
 	 * Move the world forward in time
 	 */
 	public static void worldTimeStep() {
+		a = new int [population.size()*2];
+		int z =0;
+		for (int i =0; i< population.size();i++){
+			a[z] =population.get(i).x_coord;
+			z+=1;
+			a[z] =population.get(i).y_coord;
+			z+=1;
 		
+		}
 		/* Every critter takes a step */
 		for (Critter ls : population) { ls.doTimeStep(); }
+		
+		z=0;
+		for (int i =0; i< population.size();i++){
+			a[z] =population.get(i).x_coord;
+			z+=1;
+			a[z] =population.get(i).y_coord;
+			z+=1;
+		
+		}
 		
 		/* Check for overlapping critters */
 		for (int i = 0; i < population.size(); i++) {
@@ -448,39 +541,6 @@ public abstract class Critter {
 	 * Display entire world
 	 */
 	public static void displayWorld() {
-		printEdge();
-		printMiddle();
-		printEdge();
-	}
-	
-	/**
-	 * Prints top and bottom edges of world
-	 */
-	private static void printEdge() {
-		System.out.print("+");
-		for (int i = 0; i < Params.world_width; i++) { System.out.print("-"); }
-		System.out.println("+");
-	}
-	
-	/**
-	 * Fills in middle of world
-	 */
-	private static void printMiddle() {
-		boolean found = false;
-		for (int i = 0; i < Params.world_height; i++) {
-			System.out.print("|");
-			for (int j = 0; j < Params.world_width; j++) {
-				for (int k = 0; k < population.size(); k++) {
-					if (population.get(k).x_coord == j && population.get(k).y_coord == i) {
-						System.out.print(population.get(k).toString());
-						found = true;
-						break;
-					}
-				}
-				if (!found) { System.out.print(" "); }
-				else { found = false; }
-			}
-			System.out.println("|");
-		}
+		Main.updateCanvas();
 	}
 }
