@@ -123,14 +123,17 @@ public class Theater {
 	 * @return the best seat or null if theater is full
 	 */
 	public Seat bestAvailableSeat() {
-		for (int i = 0; i < this.getRows(); i++) {
-			for (int j = 0; j < this.getSeats(); j++) {
-				if (log.isEmpty()) { return new Seat(i, j); }
-				for (Ticket t : log) {
-					Seat seat = new Seat(i, j);
-					if (t.getSeat().toString().equals(seat.toString())) { continue; }
-					else { return seat; }
+		for (int i = 1; i <= this.getRows(); i++) {
+			for (int j = 1; j <= this.getSeats(); j++) {
+				boolean taken = false;
+				Seat seat = new Seat(i, j);
+				if (log.size() == 0) { return seat; }
+				for (int k = 0; k < log.size(); k++) {
+					if (seat.toString().equals(log.get(k).getSeat().toString())) {
+						taken = true;
+					}
 				}
+				if (!taken) { return seat; }
 			}
 		}
 		return null;

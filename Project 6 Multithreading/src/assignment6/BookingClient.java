@@ -16,10 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.lang.Thread;
 
 public class BookingClient {
-	
+
 	static int client = 1;
-	private Theater t;
-	private Map<String, Integer> o;
+	private static Theater t;
+	private static Map<String, Integer> o;
 
 	/**
 	 * Initializes offices and theater like so:
@@ -62,19 +62,18 @@ public class BookingClient {
 	 * should have as many threads as there are box offices
 	 */
 	public List<Thread> simulate() {
-		//TODO: Implement this method
 		List<Thread> threadList = new ArrayList<Thread>();
 		for (String key : this.getOffice().keySet()) {
 			Show me = new Show(this, key, this.getOffice().get(key));
 			Thread t = new Thread(me, key);
 			threadList.add(t);
-			t.start();
+			t.run();
 		}
 		return threadList;
 	}
 
 	class Show implements Runnable {
-		
+
 		private BookingClient book;
 		private String boxOffice;
 		private int numCustomers;
@@ -89,8 +88,17 @@ public class BookingClient {
 
 		public int getCustomers() { return numCustomers; }
 
+		public void setCustomers(int customers) { numCustomers = customers; }
+
 		public void run() {
-			book.getTheater().printTicket(boxOffice, book.getTheater().bestAvailableSeat(), client++);
+			while (this.getCustomers() > 0 && !(book.getTheater().bestAvailableSeat() == null)) {
+				book.getTheater().printTicket(boxOffice, book.getTheater().bestAvailableSeat(), client++);
+				this.setCustomers(this.getCustomers() - 1);
+			}
+			if (book.getTheater().bestAvailableSeat() == null) {
+				System.out.println("Sorry, we are sold out!");
+				System.exit(0);
+			}
 		}
 	}
 }
