@@ -127,11 +127,8 @@ public class Theater {
 			for (int j = 1; j <= this.getSeats(); j++) {
 				boolean taken = false;
 				Seat seat = new Seat(i, j);
-				if (log.size() == 0) { return seat; }
 				for (int k = 0; k < log.size(); k++) {
-					if (seat.toString().equals(log.get(k).getSeat().toString())) {
-						taken = true;
-					}
+					if (seat.toString().equals(log.get(k).getSeat().toString())) { taken = true; }
 				}
 				if (!taken) { return seat; }
 			}

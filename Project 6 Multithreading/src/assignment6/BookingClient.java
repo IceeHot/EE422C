@@ -11,8 +11,6 @@
 package assignment6;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import java.lang.Thread;
 
 public class BookingClient {
@@ -31,7 +29,7 @@ public class BookingClient {
 	 */
 	public static void main(String[] args) {
 		Theater theater = new Theater(3, 5, "Ouija");
-		Map<String, Integer> office = new ConcurrentHashMap<String, Integer>();
+		Map<String, Integer> office = new HashMap<String, Integer>();
 		office.put("BX1", 3);
 		office.put("BX2", 4);
 		office.put("BX3", 3);
@@ -67,7 +65,7 @@ public class BookingClient {
 			Show me = new Show(this, key, this.getOffice().get(key));
 			Thread t = new Thread(me, key);
 			threadList.add(t);
-			t.run();
+			t.start();
 		}
 		return threadList;
 	}
@@ -92,12 +90,16 @@ public class BookingClient {
 
 		public void run() {
 			while (this.getCustomers() > 0 && !(book.getTheater().bestAvailableSeat() == null)) {
-				book.getTheater().printTicket(boxOffice, book.getTheater().bestAvailableSeat(), client++);
-				this.setCustomers(this.getCustomers() - 1);
+				synchronized (o) {
+					book.getTheater().printTicket(boxOffice, book.getTheater().bestAvailableSeat(), client++);
+					this.setCustomers(this.getCustomers() - 1);
+				}
 			}
 			if (book.getTheater().bestAvailableSeat() == null) {
-				System.out.println("Sorry, we are sold out!");
-				System.exit(0);
+				synchronized (o) {
+					System.out.println("Sorry, we are sold out!");
+					System.exit(0);
+				}
 			}
 		}
 	}
