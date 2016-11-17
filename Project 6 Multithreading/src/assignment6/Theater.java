@@ -17,7 +17,7 @@ public class Theater {
 	private int rows;
 	private int seats;
 	private String show;
-	static List<Ticket> log = new ArrayList<Ticket>();
+	List<Ticket> log = new ArrayList<Ticket>();
 
 	/**
 	 * Represents a seat in the theater
