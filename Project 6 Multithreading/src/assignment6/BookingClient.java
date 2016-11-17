@@ -98,7 +98,7 @@ public class BookingClient {
 			}
 			if (book.getTheater().bestAvailableSeat() == null && !finished) {
 				finished = true;
-				System.out.println("Sorry, we are sold out!");
+				System.out.print("Sorry, we are sold out!");
 			}
 		}
 	}
