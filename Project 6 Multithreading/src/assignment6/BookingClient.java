@@ -17,8 +17,8 @@ public class BookingClient {
 
 	static int client = 1;
 	static boolean finished = false;
-	private static Theater t;
-	private static Map<String, Integer> o;
+	private Theater t;
+	private Map<String, Integer> o;
 
 	/**
 	 * Initializes offices and theater like so:
