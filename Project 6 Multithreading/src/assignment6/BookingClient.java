@@ -16,6 +16,7 @@ import java.lang.Thread;
 public class BookingClient {
 
 	static int client = 1;
+	static boolean finished = false;
 	private static Theater t;
 	private static Map<String, Integer> o;
 
@@ -95,11 +96,9 @@ public class BookingClient {
 					this.setCustomers(this.getCustomers() - 1);
 				}
 			}
-			if (book.getTheater().bestAvailableSeat() == null) {
-				synchronized (o) {
-					System.out.println("Sorry, we are sold out!");
-					System.exit(0);
-				}
+			if (book.getTheater().bestAvailableSeat() == null && !finished) {
+				finished = true;
+				System.out.println("Sorry, we are sold out!");
 			}
 		}
 	}
