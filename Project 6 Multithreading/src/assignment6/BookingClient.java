@@ -94,6 +94,7 @@ public class BookingClient {
 				synchronized (o) {
 					book.getTheater().printTicket(boxOffice, book.getTheater().bestAvailableSeat(), client++);
 					this.setCustomers(this.getCustomers() - 1);
+					try { Thread.sleep(500); } catch (InterruptedException e) { }
 				}
 			}
 			if (book.getTheater().bestAvailableSeat() == null && !finished) {
