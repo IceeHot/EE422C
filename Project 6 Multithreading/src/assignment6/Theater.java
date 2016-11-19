@@ -17,9 +17,6 @@ public class Theater {
 	private int rows;
 	private int seats;
 	private String show;
-	static int lastLog = 0;
-	static int lastRow = 1;
-	static int lastSeat = 1;
 	List<Ticket> log = new ArrayList<Ticket>();
 
 	/**
