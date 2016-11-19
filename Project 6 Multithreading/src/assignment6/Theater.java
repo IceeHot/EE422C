@@ -17,6 +17,9 @@ public class Theater {
 	private int rows;
 	private int seats;
 	private String show;
+	static int lastLog = 0;
+	static int lastRow = 1;
+	static int lastSeat = 1;
 	List<Ticket> log = new ArrayList<Ticket>();
 
 	/**
@@ -123,16 +126,10 @@ public class Theater {
 	 * @return the best seat or null if theater is full
 	 */
 	public Seat bestAvailableSeat() {
-		for (int i = 1; i <= this.getRows(); i++) {
-			for (int j = 1; j <= this.getSeats(); j++) {
-				boolean taken = false;
-				Seat seat = new Seat(i, j);
-				for (int k = 0; k < log.size(); k++) {
-					if (seat.toString().equals(log.get(k).getSeat().toString())) { taken = true; }
-				}
-				if (!taken) { return seat; }
-			}
-		}
+		if (log.isEmpty()) { return new Seat(1, 1); }
+		Seat newSeat = log.get(log.size() - 1).getSeat();
+		if (newSeat.getSeatNum() < this.getSeats()) { return new Seat(newSeat.getRowNum(), newSeat.getSeatNum() + 1); }
+		if (newSeat.getRowNum() < this.getRows()) { return new Seat(newSeat.getRowNum() + 1, 1); }
 		return null;
 	}
 
