@@ -6,8 +6,10 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,12 +26,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ClientMain extends Application {
 	
@@ -45,14 +50,18 @@ public class ClientMain extends Application {
 	static GridPane scene = new GridPane();
 	static GridPane GUI = new GridPane();
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	static ArrayList<String> selectedFriends = new ArrayList<String>();
 	static ArrayList<String> friends = new ArrayList<String>();
+	static ArrayList<String> friendBox = new ArrayList<String>();
 	static String activeConvo = new String("");
-	static String command = null;
+	static String command = new String();
 	static boolean socketCreated = false;
 	static boolean isReady = false;
+	static Timeline listener;
 	
 	/* Login Objects */
 	static GridPane loginPane = new GridPane();
+	static String userName = new String();
 	static Label userLabel = new Label("Username:");
 	static Label passLabel = new Label("Password:");
 	static Label ipLabel = new Label("IP Address:");
@@ -93,7 +102,7 @@ public class ClientMain extends Application {
 	static TextField chatField = new TextField();
 	static TextField friendField = new TextField();
 	static Button addFriend = new Button("Add Friend");
-	static Button closeChat = new Button("X");
+	static Button closeChat = new Button("Leave Chat");
 	static Button deleteFriend = new Button("Delete Selected");
 	static Button send = new Button("Send");
 	static Button startChat = new Button("Start Chat");
@@ -110,22 +119,7 @@ public class ClientMain extends Application {
 	static double winWidth = screenSize.getWidth();
 	static double winHeight = screenSize.getHeight();
 	
-	public static class listen implements Runnable {
-		public void run() {
-			while (!isReady) { System.out.println("I'm not ready"); }
-			while (isReady) {
-				System.out.println("I'm ready!");
-				listen();
-				try { Thread.sleep(1000); }
-				catch (InterruptedException e) { e.printStackTrace(); }
-			}
-		}
-	}
-	
 	public static void main(String[] args) {
-		listen listener = new listen();
-		Thread newThread = new Thread(listener);
-		newThread.start();
 		launch(args);
 	}
 
@@ -141,8 +135,8 @@ public class ClientMain extends Application {
 		GUI.add(leftVBox, 0, 0);
 		GUI.add(chatPane, 1, 0);
 		
+		
 		loginScene = new Scene(scene, winWidth, winHeight);
-
 		
 		/* Set stage */
         primaryStage.setScene(loginScene);
@@ -158,18 +152,27 @@ public class ClientMain extends Application {
 		GUIConfig();
 		
 		/* Start listeners */
-		//listen();
 		screenListener();
 		loginListener();
 		createListener();
 		startChatListener();
 		sendListener();
+		chatEnterListener();
 		addFriendListener();
+		friendEnterListener();
 		deleteFriendListener();
 		acceptListener();
 		denyListener();
+		closeChatListener();
 		quitListener();
 		
+	}
+	
+	private static void startListener() {
+		
+		listener = new Timeline(new KeyFrame(Duration.millis(250), ae -> { try { listen(); } catch (IOException e) { e.printStackTrace(); }}));
+		listener.setCycleCount(Animation.INDEFINITE);
+		listener.play();
 	}
 	
 	/**
@@ -255,7 +258,7 @@ public class ClientMain extends Application {
 	}
 	
 	private static void socketConfig() {
-    	try { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4300); }
+    	try { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4560); }
     	catch (Exception e1) { e1.printStackTrace(); }
     	try {
     		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
@@ -342,9 +345,11 @@ public class ClientMain extends Application {
 		/* Configure left VBox */
 		leftVBox.setSpacing(winHeight / 10);
 		leftVBox.setAlignment(Pos.CENTER);
+		closeChat.setMinHeight(30);
+		closeChat.setMinWidth(50);
 		logOut.setMinHeight(30);
 		logOut.setMinWidth(50);
-		leftVBox.getChildren().addAll(friendPane, requestPane, logOut);
+		leftVBox.getChildren().addAll(friendPane, requestPane, closeChat, logOut);
 		
 	}
 	
@@ -384,10 +389,10 @@ public class ClientMain extends Application {
 	
 	/**
 	 * Populate friend list
+	 * @throws IOException 
 	 */
-	private static void friendConfig() {
+	private static void friendConfig() throws IOException {
 		
-		friendList.getItems().clear();
 		friendList.setMinHeight(30);
 		friendList.setMinWidth(100);
 		friendList.setMaxWidth(500);
@@ -395,33 +400,30 @@ public class ClientMain extends Application {
 		out.println("FriendList");
 		out.flush();
 		
-		String newFriend = null;
-    	try { while ((newFriend = in.readLine()) == null) { } }
-    	catch (IOException e1) { e1.printStackTrace(); }
-    	while (!newFriend.equals("Overf")) {
-    		CheckBox cb = new CheckBox(newFriend);
+		String newFriend = in.readLine();
+		System.out.println(newFriend);
+		while (!newFriend.equals("Overf")) {
+			System.out.println(newFriend);
+			if (friendBox.contains(newFriend) || newFriend.equals("")) { newFriend = in.readLine(); continue; }
+			CheckBox cb = new CheckBox(newFriend);
     		checkBoxListener(cb);
     		CustomMenuItem item = new CustomMenuItem(cb);
     		item.setHideOnClick(false);
     		friendList.getItems().add(item);
-    		try { newFriend = in.readLine(); }
-    		catch (IOException e) { e.printStackTrace(); }
-    	}
-    	
-    	
-    	/*
-		CheckBox cb0 = new CheckBox("Friend A");  
-		CustomMenuItem item0 = new CustomMenuItem(cb0);
-		CheckBox cb1 = new CheckBox("Friend B");
-		CustomMenuItem item1 = new CustomMenuItem(cb1);
-		CheckBox cb2 = new CheckBox("Friend C");
-		CustomMenuItem item2 = new CustomMenuItem(cb2);
-		item0.setHideOnClick(false);
-		item1.setHideOnClick(false);
-		item2.setHideOnClick(false);
-		friendList.getItems().setAll(item0, item1, item2);
+    		friendBox.add(newFriend);
+    		newFriend = in.readLine();
+		}
+		/*
+		for (String s : friends) {
+			if (friendBox.contains(s)) { continue; }
+			CheckBox cb = new CheckBox(s);
+    		checkBoxListener(cb);
+    		CustomMenuItem item = new CustomMenuItem(cb);
+    		item.setHideOnClick(false);
+    		friendList.getItems().add(item);
+    		friendBox.add(s);
+		}
 		*/
-    	
 	}
 	
 	/**
@@ -454,8 +456,8 @@ public class ClientMain extends Application {
 	private static void checkBoxListener(final CheckBox cb) {
 		cb.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
-				if (cb.isSelected()) { friends.add(cb.getText()); }
-				if (!cb.isSelected()) { friends.remove(cb.getText()); }
+				if (cb.isSelected()) { selectedFriends.add(cb.getText()); }
+				if (!cb.isSelected()) { selectedFriends.remove(cb.getText()); }
 	        }
 		});
 	}
@@ -481,12 +483,14 @@ public class ClientMain extends Application {
 		    	catch (Exception e1) { e1.printStackTrace(); }
 		    	
 		    	if (newString.equals("Success")) {
-		    		friendConfig();
+		    		try { friendConfig(); }
+		    		catch (IOException e1) { e1.printStackTrace(); }
 			    	leftConfig();
 			    	chatConfig();
+			    	userName = userField.getText();
 					GUIScene = new Scene(GUI, winWidth, winHeight);
-					isReady = true;
 			        secondaryStage.setScene(GUIScene);
+			        startListener();
 		    	} else {
 		    		// TODO: Acutal invalid password handling
 		    		System.out.println("Invalid Username or Password!");
@@ -512,20 +516,23 @@ public class ClientMain extends Application {
 		    	out.flush();
 		    	
 		    	String newString = null;
-		    	try {
-		    		while (newString == null) {
-		    			newString = in.readLine();
-	    			}
-	    		}
-		    	catch (Exception e1) { System.out.println("Exception thrown"); e1.printStackTrace(); }
+		    	try { while (newString == null) { newString = in.readLine(); } }
+		    	catch (Exception e1) { e1.printStackTrace(); }
 		    	
 		    	if (newString.equals("Success")) {
-			    	friendConfig();
+			    	try {
+						friendConfig();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 			    	leftConfig();
 			    	chatConfig();
+			    	userName = userField.getText();
 					GUIScene = new Scene(GUI, winWidth, winHeight);
 					isReady = true;
 			        secondaryStage.setScene(GUIScene);
+			        startListener();
 		    	} else {
 		    		// TODO: Acutal invalid password handling
 		    		System.out.println("User already exists!");
@@ -540,18 +547,24 @@ public class ClientMain extends Application {
 	private static void startChatListener() {
 		startChat.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
 		    	activeConvo = "";
-		    	Collections.sort(friends);
+		    	selectedFriends.add(userName);
+		    	Collections.sort(selectedFriends);
 		    	out.println("New Chat");
 		    	out.flush();
-		    	for (int i = 0; i < friends.size(); i++) {
-		    		activeConvo += friends.get(i);
-		    		out.println(friends.get(i));
+		    	for (int i = 0; i < selectedFriends.size(); i++) {
+		    		activeConvo += selectedFriends.get(i);
+		    		System.out.println(selectedFriends.get(i));
+		    		out.println(selectedFriends.get(i));
 		    		out.flush();
 		    	}
+		    	System.out.println(activeConvo);
 		    	out.println("no more");
 		    	out.flush();
+		    	selectedFriends.remove(userName);
 		    	chatArea.clear();
+		    	listener.play();
 	        }
 	    });
 	}
@@ -559,12 +572,41 @@ public class ClientMain extends Application {
 	private static void sendListener() {
 		send.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
 		    	out.println("Addchit");
 		    	out.flush();
 		    	out.println(activeConvo);
 		    	out.flush();
-		    	out.println(chatField.getText());
+		    	out.println(userName + ": " + chatField.getText());
 		    	out.flush();
+		    	chatField.clear();
+		    	listener.play();
+	        }
+	    });
+	}
+	
+	/**
+	 * Listen for enter key pressed on chat field
+	 */
+	private static void chatEnterListener() {
+		chatField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!chatField.getText().equals("")) { send.fire(); }
+	            }
+	        }
+	    });
+	}
+	
+	/**
+	 * Listen for enter key pressed on add friend field
+	 */
+	private static void friendEnterListener() {
+		friendField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!friendField.getText().equals("")) { addFriend.fire(); }
+	            }
 	        }
 	    });
 	}
@@ -575,14 +617,20 @@ public class ClientMain extends Application {
 	private static void addFriendListener() {
 		addFriend.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
 		    	out.println("AddFriend");
 		    	out.flush();
 		    	out.println(friendField.getText());
 		    	out.flush();
+		    	friends.add(friendField.getText());
+		    	friendField.clear();
 		    	String newFriend = null;
-		    	try { while ((newFriend = in.readLine()) == null) { } }
-		    	catch (IOException e1) { e1.printStackTrace(); }
-		    	if (newFriend.equals("newfriend")) { friendConfig(); }
+		    	try {
+					while (!in.ready()) { }
+					newFriend = in.readLine();
+					if (newFriend.equals("newfriend")) { friendConfig(); }
+				} catch (IOException e1) { e1.printStackTrace(); }
+		    	listener.play();
 	        }
 	    });
 	}
@@ -590,15 +638,19 @@ public class ClientMain extends Application {
 	private static void deleteFriendListener() {
 		deleteFriend.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
 		    	out.println("DeleteFriend");
 		    	out.flush();
-		    	for (int i = 0; i < friends.size(); i++) {
-		    		out.println(friends.get(i));
+		    	for (int i = 0; i < selectedFriends.size(); i++) {
+		    		friends.remove(selectedFriends.get(i));
+		    		out.println(selectedFriends.get(i));
 		    		out.flush();
 		    	}
 		    	out.println("Over");
 		    	out.flush();
-		    	friendConfig();
+		    	try { friendConfig(); }
+		    	catch (IOException e1) { e1.printStackTrace(); }
+		    	listener.play();
 	        }
 	    });
 	}
@@ -614,10 +666,33 @@ public class ClientMain extends Application {
 	private static void denyListener() {
 		deny.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
-		    	//out.println("DeleteFriend");
-		    	//out.flush();
-		    	
-		    	// TODO print guy's name
+		    	listener.stop();
+		    	out.println("DeleteFriend");
+		    	out.flush();
+		    	out.println(requestLabel.getText().split(" ")[0]);
+		    	out.flush();
+		    	out.println("Over");
+		    	out.flush();
+		    	friends.remove(requestLabel.getText().split(" ")[0]);
+		    	try { friendConfig(); }
+		    	catch (IOException e1) { e1.printStackTrace(); }
+		    	listener.play();
+	        }
+	    });
+	}
+	
+	private static void closeChatListener() {
+		closeChat.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
+		    	out.println("End Chat");
+		    	out.flush();
+		    	out.println(activeConvo);
+		    	out.flush();
+		    	out.println(userName);
+		    	out.flush();
+		    	chatArea.clear();
+		    	listener.play();
 	        }
 	    });
 	}
@@ -630,6 +705,8 @@ public class ClientMain extends Application {
 		    @Override public void handle(ActionEvent e) {
 		    	out.println("Quit");
 		    	out.flush();
+		    	listener.stop();
+		    	socketCreated = false;
 		    	secondaryStage.setScene(loginScene);
 	        }
 	    });
@@ -651,41 +728,56 @@ public class ClientMain extends Application {
 		});
 	}
 	
-	private static void listen() {
-		System.out.println("Started listening!");
-    	try { while ((command = in.readLine()) == null) { } }
-    	catch (IOException e1) { e1.printStackTrace(); }
-    	if (command.equals("friendadd")) {
-    		try { command = in.readLine(); }
-    		catch (IOException e) { e.printStackTrace(); }
-    		Platform.runLater(() -> requestLabel.setText(command + " has added you!"));
-    	}
-    	else if (command.equals("UpdateChat")) {
-    		try { command = in.readLine(); }
-    		catch (IOException e) { e.printStackTrace(); }
-    		if (command.equals(activeConvo)) {
-    			Platform.runLater(() -> chatArea.clear());
-    			while (!command.equals("qwertyuiop")) {
-    	    		try { command = in.readLine(); }
-    	    		catch (IOException e) { e.printStackTrace(); }
-    	    		Platform.runLater(() -> chatArea.appendText(command));
-    			}
-    		}
-    		while (!command.equals("qwertyuiop")) {
-	    		try { command = in.readLine(); }
-	    		catch (IOException e) { e.printStackTrace(); }
-			}
-    	}
-    	else if (command.equals("Addchit")) {
-    		System.out.println("entered");
-    		try { command = in.readLine(); }
-    		catch (IOException e) { e.printStackTrace(); }
-    		if (command.equals(activeConvo)) {
-    			System.out.println("entered again");
-	    		try { command = in.readLine(); }
-	    		catch (IOException e) { e.printStackTrace(); }
-	    		Platform.runLater(() -> chatArea.appendText(command));
-    		}
-    	}
+	private static void listen() throws IOException {
+		command = "";
+		if (in.ready()) {
+			command = in.readLine();
+			System.out.println(command);
+	    	if (command.equals("friendadd")) {
+	    		command = in.readLine();
+	    		if (!friends.contains(command)) {
+			    	out.println("AddFriend");
+			    	out.flush();
+			    	out.println(command);
+			    	out.flush();
+			    	friends.add(command);
+		    		requestLabel.setText(command + " has added you!");
+					command = in.readLine();
+					friendConfig();
+	    		}
+	    	}
+	    	else if (command.equals("UpdateChat")) {
+	    		System.out.println("Updating chat!");
+	    		command = in.readLine();
+	    		System.out.println(command);
+	    		if (command.equals(activeConvo)) {
+	    			chatArea.clear();
+	    			System.out.println("Just cleared");
+    				command = in.readLine();
+	    			while (!command.equals("qwertyuiop")) {
+	    				System.out.println(command);
+	    	    		chatArea.appendText(command);
+	    				command = in.readLine();
+	    			}
+    	    		System.out.println("I've reached the end");
+	    		}
+	    		else {
+		    		System.out.println("Active conversation didn't match");
+		    		while (!command.equals("qwertyuiop")) {
+		    			command = in.readLine();
+					}
+	    		}
+	    	}
+	    	else if (command.equals("Addchit")) {
+	    		System.out.println("entered");
+	    		command = in.readLine();
+	    		if (command.equals(activeConvo)) {
+	    			System.out.println("entered again");
+	    			command = in.readLine();
+		    		chatArea.appendText(command);
+		    		chatArea.appendText("\n");
+	    		}
+	    	}
+		}
 	}
 }

@@ -238,12 +238,15 @@ public class ServerMain {
 											   for (String q: checkifexists){
 												   g+=q;
 											   }
+											   
+											   if(!convolist.isEmpty()){
 											   if(convolist.containsKey(g)){
 												   writer.println("preparepast");
 												   writer.flush();
 												  convolist.get(g).Printpast(g);
-											   }
-											   else{
+											   }}
+											   else{System.out.println("Creating chatroom");
+												   
 											   new ChatRoomObject(peoplechatting);}
 											   
 											 //  convolist.put(,peoplechatting);
@@ -350,7 +353,7 @@ public class ServerMain {
 			}
 			@Override
 			public void update(Observable ooo , Object arg){
-				
+				System.out.println("Observers printing");
 				this.println(arg);
 				this.flush();
 				
@@ -383,6 +386,7 @@ public class ServerMain {
 						convoname+=g;
 						
 					}
+					System.out.println("Convolist not empty");
 				
 			convolist.put(convoname, this);
 					
@@ -429,9 +433,10 @@ public class ServerMain {
 			public void UpdateChat(String update) throws IOException{
 				minutesconversation+=update;
 				
-				hasChanged();
-			
+				setChanged();
+			  System.out.println("Notifying observers");
 				notifyObservers("Addchit\n"+convoname+"\n"+update+"\n");
+				System.out.println(update);
 				File nonsense;
 				PrintWriter convotracker;
                nonsense = new File(Data.getAbsolutePath()+java.io.File.separator+convoname+".txt");
@@ -458,7 +463,7 @@ public class ServerMain {
 			public void UpdateC(String update) throws IOException{
 				minutesconversation+=update;
 				 System.out.println("updatec not null");
-				hasChanged();
+				setChanged();
 			
 				notifyObservers("UpdateChat\n"+convoname+"\n"+update);
 				
