@@ -12,7 +12,7 @@ public class ServerMain {
 	static HashMap <String, ChatRoomObject> convolist = new HashMap<String,ChatRoomObject>();
 	static  ArrayList<Socket> UserSocks = new ArrayList<Socket>();
 	static ArrayList<String> Sockusernames = new ArrayList<String>();
-	static HashMap<String,BufferedReader> bemyfriend  =new HashMap<String,BufferedReader> ();
+	static HashMap<String,BufferedReader> bemyfriend ;
 	static ArrayList<Integer> online = new ArrayList<Integer>();
     static  int chatnumber =0;
     static File UserData;
@@ -28,9 +28,10 @@ public class ServerMain {
 		try{
 			boolean controller=true;
 			
-			ServerSocket Server  = new ServerSocket(4300);
+			ServerSocket Server  = new ServerSocket(4580);
 			 CreateFileStructure();
 			 connectedusr = new HashMap<String, ObservablePrint>();
+			 bemyfriend  =new HashMap<String,BufferedReader> ();
 			
 			while (controller){
 				
@@ -155,6 +156,7 @@ public class ServerMain {
                 	incomplete =false;
                 	loggedin =true;
                 	connectedusr.put(chkusername,writer);
+                	bemyfriend.put(chkusername,reader );
                 	
                }
             }
@@ -174,6 +176,7 @@ public class ServerMain {
             				incomplete =false;
             				loggedin=true;
             				connectedusr.put(username,writer);
+            				bemyfriend.put(username, reader);
             			}
             			
             		}
@@ -217,17 +220,28 @@ public class ServerMain {
 							                        if(!friendlist.isEmpty()){
 													for (String jh: friendlist){
 														pr.println(jh);
+														System.out.println(jh);
 													}}
 						                         pr.close();
 						                 		connectedusr.remove(username);
+						                 		bemyfriend.remove(username);
 						                 		loggedin = false;
 					                            
 						                 		break;
 					
-					case "New Chat":           ArrayList<String> peoplechatting = new ArrayList<String> ();
+					case "New Chat":             
+						
+						
+						
+						
+						
+						
+						ArrayList<String> peoplechatting = new ArrayList<String> ();
+											  System.out.println("Making new new chat");
 					                           String p;
 											   while (!(p=reader.readLine()).equals("no more")){
 												  peoplechatting.add(p); 
+												  System.out.println(p);
 												   }
 											   ArrayList<String> checkifexists = new ArrayList<String>();
 											   for (String count : peoplechatting){
@@ -239,21 +253,57 @@ public class ServerMain {
 												   g+=q;
 											   }
 											   
-											   if(!convolist.isEmpty()){
+											   
+											   	File checker;
+											   
+								               checker = new File(Data.getAbsolutePath()+java.io.File.separator+g+".txt");
+								               boolean qq =checker.exists();
+								               System.out.println(qq +"check ");
+								               
+								               if(qq){
+								            	  writer.println("UpdateChat\n"+g);
+								            	 // writer.println(g);
+								            	 Scanner updation = new Scanner(checker);
+													while (updation.hasNextLine()){
+													
+													 writer.println(updation.nextLine());
+													
+													}
+													 updation.close();
+													 writer.println("qwertyuiop");
+								               }
+                                         
+									            
+											   
+											   if(!convolist.isEmpty() ){
+												   System.out.println("Check one");
 											   if(convolist.containsKey(g)){
-												   writer.println("preparepast");
-												   writer.flush();
+												   System.out.println("Printing past");
+												   
+												 //  writer.println("preparepast");
+												   //writer.flush();
 												  convolist.get(g).Printpast(g);
-											   }}
+											   }
+											   
+											  
+													
+											   
+											   
 											   else{System.out.println("Creating chatroom");
 												   
 											   new ChatRoomObject(peoplechatting);}
-											   
+											   }
+											   if (convolist.isEmpty()){ 
+												   
+											   new ChatRoomObject(peoplechatting);}
+											  
 											 //  convolist.put(,peoplechatting);
 						                       break;
 					
 					case "End Chat":            String b = reader.readLine();
 					 							convolist.get(b).deleteObserver(connectedusr.get(username));
+					 							
+					 							
 					
 						
 						                       break; 
@@ -263,6 +313,20 @@ public class ServerMain {
 												writer.flush();
 								
 												}}
+																					
+													 File readfriend = new File(Data.getAbsolutePath()+java.io.File.separator+username+".txt");
+								                     Scanner sc= new Scanner(readfriend);
+								                     while (sc.hasNextLine()){
+								                    	 String j =sc.nextLine();
+								                    	 System.out.println(j);
+								                    	 if(!friendlist.contains(j)){
+								                    		 	friendlist.add(j);}
+								                    	 writer.println(j);
+								                    	 writer.flush();
+								                     }
+								                     sc.close();
+					
+												
 					                            writer.println("Overf");
 					                            writer.flush();
 				                                
@@ -275,6 +339,7 @@ public class ServerMain {
 					case "AddFriend":  //friendlist.add(reader.readLine());
 										//System.out.println("1");
 										String b1 = reader.readLine();
+										//if(!friendlist.contains(b1)){
 										//System.out.println("2");
 										if (connectedusr.containsKey(b1)){
 											connectedusr.get(b1).println("friendadd");
@@ -292,6 +357,7 @@ public class ServerMain {
 											//writer.println("nonewfriends");
 											//writer.flush();
 											//System.out.println("3");
+											//bemyfriend.get
 											friendlist.add(b1);
 											writer.println("newfriend");
 											writer.flush();
@@ -304,7 +370,7 @@ public class ServerMain {
 											writer.flush();
 										}
 										
-										
+										//}
 						               break;
 						               
 					case "DeleteFriend": //friendlist.remove(reader.readLine()); 
@@ -353,7 +419,8 @@ public class ServerMain {
 			}
 			@Override
 			public void update(Observable ooo , Object arg){
-				System.out.println("Observers printing");
+				System.out.println("Printing to observers");
+				System.out.println(arg);
 				this.println(arg);
 				this.flush();
 				
@@ -421,10 +488,16 @@ public class ServerMain {
 				tracker.createNewFile();
 			}
 			Scanner read = new Scanner(tracker);
+			setChanged();
+			notifyObservers("UpdateChat\n"+convoname);
+			System.out.println("Printing old cha");
+			//setChanged();
+			//System.out.println(convoname);
+			//notifyObservers (convoname+"\n");
 			while (read.hasNextLine()){
 				UpdateC(read.nextLine());
-			}
-			    notifyObservers("qwertyuiop\n");
+			}   setChanged();
+			    notifyObservers("qwertyuiop");
 				read.close();
 				
 			}
@@ -436,6 +509,7 @@ public class ServerMain {
 				setChanged();
 			  System.out.println("Notifying observers");
 				notifyObservers("Addchit\n"+convoname+"\n"+update+"\n");
+				System.out.println("UC"+convoname);
 				System.out.println(update);
 				File nonsense;
 				PrintWriter convotracker;
@@ -463,9 +537,12 @@ public class ServerMain {
 			public void UpdateC(String update) throws IOException{
 				minutesconversation+=update;
 				 System.out.println("updatec not null");
+				 System.out.println(convoname);
 				setChanged();
+				
+				
 			
-				notifyObservers("UpdateChat\n"+convoname+"\n"+update);
+				notifyObservers(update+"\n");
 				
 	           
 				

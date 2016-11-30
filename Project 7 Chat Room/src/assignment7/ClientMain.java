@@ -1,3 +1,16 @@
+/* 
+ * Chat Room ClientMain.java
+ * EE422C Project 7 submission by
+ * Brent Atchison
+ * bma862
+ * 16455
+ * Dhruv Mathew
+ * dkm989
+ * 16455
+ * Slip days used: <1>
+ * Fall 2016
+ */
+
 package assignment7;
 
 import java.awt.Dimension;
@@ -135,7 +148,6 @@ public class ClientMain extends Application {
 		GUI.add(leftVBox, 0, 0);
 		GUI.add(chatPane, 1, 0);
 		
-		
 		loginScene = new Scene(scene, winWidth, winHeight);
 		
 		/* Set stage */
@@ -169,8 +181,10 @@ public class ClientMain extends Application {
 	}
 	
 	private static void startListener() {
-		
-		listener = new Timeline(new KeyFrame(Duration.millis(250), ae -> { try { listen(); } catch (IOException e) { e.printStackTrace(); }}));
+		listener = new Timeline(new KeyFrame(Duration.millis(250), ae -> {
+			try { listen(); }
+			catch (IOException e) { e.printStackTrace(); }
+		}));
 		listener.setCycleCount(Animation.INDEFINITE);
 		listener.play();
 	}
@@ -257,8 +271,11 @@ public class ClientMain extends Application {
 		
 	}
 	
+	/**
+	 * Configure socket
+	 */
 	private static void socketConfig() {
-    	try { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4560); }
+    	try { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4580); }
     	catch (Exception e1) { e1.printStackTrace(); }
     	try {
     		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
@@ -389,6 +406,7 @@ public class ClientMain extends Application {
 	
 	/**
 	 * Populate friend list
+	 * 
 	 * @throws IOException 
 	 */
 	private static void friendConfig() throws IOException {
@@ -413,17 +431,6 @@ public class ClientMain extends Application {
     		friendBox.add(newFriend);
     		newFriend = in.readLine();
 		}
-		/*
-		for (String s : friends) {
-			if (friendBox.contains(s)) { continue; }
-			CheckBox cb = new CheckBox(s);
-    		checkBoxListener(cb);
-    		CustomMenuItem item = new CustomMenuItem(cb);
-    		item.setHideOnClick(false);
-    		friendList.getItems().add(item);
-    		friendBox.add(s);
-		}
-		*/
 	}
 	
 	/**
@@ -520,12 +527,8 @@ public class ClientMain extends Application {
 		    	catch (Exception e1) { e1.printStackTrace(); }
 		    	
 		    	if (newString.equals("Success")) {
-			    	try {
-						friendConfig();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+			    	try { friendConfig(); }
+			    	catch (IOException e1) { e1.printStackTrace(); }
 			    	leftConfig();
 			    	chatConfig();
 			    	userName = userField.getText();
@@ -569,6 +572,9 @@ public class ClientMain extends Application {
 	    });
 	}
 	
+	/**
+	 * Listen to send button
+	 */
 	private static void sendListener() {
 		send.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -635,6 +641,9 @@ public class ClientMain extends Application {
 	    });
 	}
 	
+	/**
+	 * Listen for friend deletion
+	 */
 	private static void deleteFriendListener() {
 		deleteFriend.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -655,6 +664,9 @@ public class ClientMain extends Application {
 	    });
 	}
 	
+	/**
+	 * Listen for friend acceptance
+	 */
 	private static void acceptListener() {
 		accept.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -663,6 +675,9 @@ public class ClientMain extends Application {
 	    });
 	}
 	
+	/**
+	 * Listen for friend denial
+	 */
 	private static void denyListener() {
 		deny.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -681,6 +696,9 @@ public class ClientMain extends Application {
 	    });
 	}
 	
+	/**
+	 * Listen for close chat
+	 */
 	private static void closeChatListener() {
 		closeChat.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -728,6 +746,11 @@ public class ClientMain extends Application {
 		});
 	}
 	
+	/**
+	 * Listen for server commands
+	 * 
+	 * @throws IOException
+	 */
 	private static void listen() throws IOException {
 		command = "";
 		if (in.ready()) {
@@ -750,6 +773,7 @@ public class ClientMain extends Application {
 	    		System.out.println("Updating chat!");
 	    		command = in.readLine();
 	    		System.out.println(command);
+	    		System.out.println(activeConvo);
 	    		if (command.equals(activeConvo)) {
 	    			chatArea.clear();
 	    			System.out.println("Just cleared");
@@ -757,6 +781,7 @@ public class ClientMain extends Application {
 	    			while (!command.equals("qwertyuiop")) {
 	    				System.out.println(command);
 	    	    		chatArea.appendText(command);
+	    	    		chatArea.appendText("\n");
 	    				command = in.readLine();
 	    			}
     	    		System.out.println("I've reached the end");
@@ -775,7 +800,7 @@ public class ClientMain extends Application {
 	    			System.out.println("entered again");
 	    			command = in.readLine();
 		    		chatArea.appendText(command);
-		    		chatArea.appendText("\n");
+		    		chatArea.appendText("\n\n");
 	    		}
 	    	}
 		}
