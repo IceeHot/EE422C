@@ -69,6 +69,7 @@ public class ClientMain extends Application {
 	static String activeConvo = new String("");
 	static String command = new String();
 	static boolean socketCreated = false;
+	static boolean loggedIn = false;
 	static boolean isReady = false;
 	static Timeline listener;
 	
@@ -78,7 +79,7 @@ public class ClientMain extends Application {
 	static Label userLabel = new Label("Username:");
 	static Label passLabel = new Label("Password:");
 	static Label ipLabel = new Label("IP Address:");
-	static Label invalid = new Label("Invalid Password!");
+	static Label invalid = new Label("");
 	static Label cln0 = new Label(":");
 	static Label cln1 = new Label(":");
 	static Label cln2 = new Label(":");
@@ -108,24 +109,29 @@ public class ClientMain extends Application {
 	static HBox loginHBox = new HBox();
 	static HBox createHBox = new HBox();
 	static HBox ipHBox = new HBox();
+	static HBox invalidHBox = new HBox();
 	
 	/* GUI Objects */
 	static MenuButton friendList = new MenuButton("Friends");
 	static TextArea chatArea = new TextArea();
 	static TextField chatField = new TextField();
 	static TextField friendField = new TextField();
+	static TextField changePassField = new TextField();
+	static Button changePass = new Button("Change Password");
 	static Button addFriend = new Button("Add Friend");
 	static Button closeChat = new Button("Leave Chat");
-	static Button deleteFriend = new Button("Delete Selected");
+	//static Button deleteFriend = new Button("Delete Selected");
 	static Button send = new Button("Send");
 	static Button startChat = new Button("Start Chat");
 	static Button logOut = new Button("Log Out");
 	static Button accept = new Button("Accept");
 	static Button deny = new Button("Deny");
 	static Label requestLabel = new Label();
+	static Label usernameLabel = new Label();
 	static GridPane friendPane = new GridPane();
 	static GridPane requestPane = new GridPane();
 	static GridPane chatPane = new GridPane();
+	static HBox changePassHBox = new HBox();
 	static VBox leftVBox = new VBox();
 	
 	/* Window size */
@@ -166,16 +172,19 @@ public class ClientMain extends Application {
 		/* Start listeners */
 		screenListener();
 		loginListener();
+		loginEnterListener();
 		createListener();
 		startChatListener();
 		sendListener();
 		chatEnterListener();
 		addFriendListener();
 		friendEnterListener();
-		deleteFriendListener();
+		//deleteFriendListener();
 		acceptListener();
 		denyListener();
 		closeChatListener();
+		changePassListener();
+		changePassEnterListener();
 		quitListener();
 		
 	}
@@ -215,14 +224,16 @@ public class ClientMain extends Application {
 		
 		/* Login row constraints */
 		RowConstraints loginRow0 = new RowConstraints();
-		loginRow0.setPercentHeight(25);
+		loginRow0.setPercentHeight(20);
 		RowConstraints loginRow1 = new RowConstraints();
-		loginRow1.setPercentHeight(25);
+		loginRow1.setPercentHeight(20);
 		RowConstraints loginRow2 = new RowConstraints();
-		loginRow2.setPercentHeight(25);
+		loginRow2.setPercentHeight(20);
 		RowConstraints loginRow3 = new RowConstraints();
-		loginRow3.setPercentHeight(25);
-		loginPane.getRowConstraints().addAll(loginRow0, loginRow1, loginRow2, loginRow3);
+		loginRow3.setPercentHeight(20);
+		RowConstraints loginRow4 = new RowConstraints();
+		loginRow3.setPercentHeight(20);
+		loginPane.getRowConstraints().addAll(loginRow0, loginRow1, loginRow2, loginRow3, loginRow4);
 		
 		/* Limit text field lengths */
 		addTextLimiter(ip0, 3);
@@ -234,6 +245,8 @@ public class ClientMain extends Application {
 		ipHBox.setSpacing(5);
 		loginHBox.setAlignment(Pos.CENTER);
 		createHBox.setAlignment(Pos.CENTER);
+		invalidHBox.setAlignment(Pos.CENTER);
+		invalid.setMinHeight(30);
 		loginButton.setMinHeight(30);
 		loginButton.setMinWidth(60);
 		createButton.setMinHeight(30);
@@ -241,6 +254,7 @@ public class ClientMain extends Application {
 		ipHBox.setMaxWidth(200);
 		loginHBox.getChildren().add(loginButton);
 		createHBox.getChildren().add(createButton);
+		invalidHBox.getChildren().add(invalid);
 		ip0.setMinHeight(30);
 		ip1.setMinHeight(30);
 		ip2.setMinHeight(30);
@@ -268,6 +282,7 @@ public class ClientMain extends Application {
 		loginPane.add(ipVBox, 0, 2, 2, 1);
 		loginPane.add(loginHBox, 0, 3);
 		loginPane.add(createHBox, 1, 3);
+		loginPane.add(invalidHBox, 0, 4, 2, 1);
 		
 	}
 	
@@ -275,7 +290,7 @@ public class ClientMain extends Application {
 	 * Configure socket
 	 */
 	private static void socketConfig() {
-    	try { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4580); }
+    	try { if (!socketCreated) { sock = new Socket(ip0.getText() + "." + ip1.getText() + "." + ip2.getText() + "." + ip3.getText(), 4580); } }
     	catch (Exception e1) { e1.printStackTrace(); }
     	try {
     		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
@@ -335,10 +350,10 @@ public class ClientMain extends Application {
 		friendPane.add(friendList, 0, 0, 2, 1);
 		startChat.setMinHeight(30);
 		startChat.setMinWidth(50);
-		friendPane.add(startChat, 0, 1);
-		deleteFriend.setMinHeight(30);
-		deleteFriend.setMinWidth(50);
-		friendPane.add(deleteFriend, 1, 1);
+		friendPane.add(startChat, 0, 1, 2, 1);
+		//deleteFriend.setMinHeight(30);
+		//deleteFriend.setMinWidth(50);
+		//friendPane.add(deleteFriend, 1, 1);
 		friendField.setMaxWidth(200);
 		friendField.setMinHeight(30);
 		friendPane.add(friendField, 0, 2);
@@ -347,26 +362,37 @@ public class ClientMain extends Application {
 		friendPane.add(addFriend, 1, 2);
 		
 		/* Configure acceptPane */
-		requestPane.setHgap(10);
+		requestPane.setHgap(20);
 		requestPane.setVgap(10);
 		requestPane.setAlignment(Pos.CENTER);
 		requestLabel.setMinHeight(30);
 		requestPane.add(requestLabel, 0, 0, 2, 1);
 		accept.setMinHeight(30);
 		accept.setMinWidth(50);
+		accept.setDisable(true);
 		requestPane.add(accept, 0, 1);
 		deny.setMinHeight(30);
 		deny.setMinWidth(50);
+		deny.setDisable(true);
 		requestPane.add(deny, 1, 1);
+		
+		/* Configure changePass */
+		changePass.setMinHeight(30);
+		changePass.setMinWidth(50);
+		changePassField.setMinHeight(30);
+		changePassHBox.setSpacing(20);
+		changePassHBox.setAlignment(Pos.CENTER);
+		changePassHBox.getChildren().addAll(changePassField, changePass);
 		
 		/* Configure left VBox */
 		leftVBox.setSpacing(winHeight / 10);
 		leftVBox.setAlignment(Pos.CENTER);
+		usernameLabel.setMinHeight(30);
 		closeChat.setMinHeight(30);
 		closeChat.setMinWidth(50);
 		logOut.setMinHeight(30);
 		logOut.setMinWidth(50);
-		leftVBox.getChildren().addAll(friendPane, requestPane, closeChat, logOut);
+		leftVBox.getChildren().addAll(usernameLabel, friendPane, requestPane, closeChat, changePassHBox, logOut);
 		
 	}
 	
@@ -395,6 +421,7 @@ public class ClientMain extends Application {
 		
 		chatPane.setHgap(10);
 		chatPane.setVgap(20);
+		chatArea.setWrapText(true);
 		chatPane.add(chatArea, 0, 0, 2, 1);
 		chatField.setMinHeight(50);
 		chatPane.add(chatField, 0, 1);
@@ -411,6 +438,7 @@ public class ClientMain extends Application {
 	 */
 	private static void friendConfig() throws IOException {
 		
+		friendList.getItems().clear();
 		friendList.setMinHeight(30);
 		friendList.setMinWidth(100);
 		friendList.setMaxWidth(500);
@@ -420,6 +448,7 @@ public class ClientMain extends Application {
 		
 		String newFriend = in.readLine();
 		System.out.println(newFriend);
+		friendBox.clear();
 		while (!newFriend.equals("Overf")) {
 			System.out.println(newFriend);
 			if (friendBox.contains(newFriend) || newFriend.equals("")) { newFriend = in.readLine(); continue; }
@@ -492,16 +521,17 @@ public class ClientMain extends Application {
 		    	if (newString.equals("Success")) {
 		    		try { friendConfig(); }
 		    		catch (IOException e1) { e1.printStackTrace(); }
-			    	leftConfig();
-			    	chatConfig();
 			    	userName = userField.getText();
-					GUIScene = new Scene(GUI, winWidth, winHeight);
+			    	usernameLabel.setText(userName);
+		    		if (!loggedIn) {
+		    			loggedIn = true;
+				    	leftConfig();
+				    	chatConfig();
+						GUIScene = new Scene(GUI, winWidth, winHeight);
+		    		}
 			        secondaryStage.setScene(GUIScene);
 			        startListener();
-		    	} else {
-		    		// TODO: Acutal invalid password handling
-		    		System.out.println("Invalid Username or Password!");
-		    	}
+		    	} else { invalid.setText("Invalid Username or Password!"); }
 	        }
 	    });
 	}
@@ -529,17 +559,77 @@ public class ClientMain extends Application {
 		    	if (newString.equals("Success")) {
 			    	try { friendConfig(); }
 			    	catch (IOException e1) { e1.printStackTrace(); }
-			    	leftConfig();
-			    	chatConfig();
+			    	if (!loggedIn) {
+				    	leftConfig();
+				    	chatConfig();
+			    	}
 			    	userName = userField.getText();
+			    	usernameLabel.setText(userName);
 					GUIScene = new Scene(GUI, winWidth, winHeight);
 					isReady = true;
 			        secondaryStage.setScene(GUIScene);
 			        startListener();
-		    	} else {
-		    		// TODO: Acutal invalid password handling
-		    		System.out.println("User already exists!");
-		    	}
+		    	} else { invalid.setText("User already exists!"); }
+	        }
+	    });
+	}
+	
+	/**
+	 * Listen for enter key pressed on change pass field
+	 */
+	private static void loginEnterListener() {
+		userField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
+	        }
+	    });
+		passField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
+	        }
+	    });
+		ip0.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
+	        }
+	    });
+		ip1.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
+	        }
+	    });
+		ip2.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
+	        }
+	    });
+		ip3.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!userField.getText().equals("") && !passField.getText().equals("") && 
+	            			!ip0.getText().equals("") && !ip1.getText().equals("") &&
+	            			!ip2.getText().equals("") && !ip3.getText().equals("")) { loginButton.fire(); }
+	            }
 	        }
 	    });
 	}
@@ -623,27 +713,29 @@ public class ClientMain extends Application {
 	private static void addFriendListener() {
 		addFriend.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
-		    	listener.stop();
-		    	out.println("AddFriend");
-		    	out.flush();
-		    	out.println(friendField.getText());
-		    	out.flush();
-		    	friends.add(friendField.getText());
-		    	friendField.clear();
-		    	String newFriend = null;
-		    	try {
-					while (!in.ready()) { }
-					newFriend = in.readLine();
-					if (newFriend.equals("newfriend")) { friendConfig(); }
-				} catch (IOException e1) { e1.printStackTrace(); }
-		    	listener.play();
+		    	if (!friendField.getText().equals(userName)) {
+			    	listener.stop();
+			    	out.println("AddFriend");
+			    	out.flush();
+			    	out.println(friendField.getText());
+			    	out.flush();
+			    	friends.add(friendField.getText());
+			    	friendField.clear();
+			    	String newFriend = null;
+			    	try {
+						while (!in.ready()) { }
+						newFriend = in.readLine();
+						if (newFriend.equals("newfriend")) { friendConfig(); }
+					} catch (IOException e1) { e1.printStackTrace(); }
+			    	listener.play();
+		    	} else { friendField.clear(); }
 	        }
 	    });
 	}
 	
 	/**
 	 * Listen for friend deletion
-	 */
+	 *
 	private static void deleteFriendListener() {
 		deleteFriend.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
@@ -654,6 +746,7 @@ public class ClientMain extends Application {
 		    		friends.remove(selectedFriends.get(i));
 		    		out.println(selectedFriends.get(i));
 		    		out.flush();
+		    		selectedFriends.remove(selectedFriends.get(i));
 		    	}
 		    	out.println("Over");
 		    	out.flush();
@@ -670,7 +763,9 @@ public class ClientMain extends Application {
 	private static void acceptListener() {
 		accept.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
-		    	// TODO: make them feel good
+		    	requestLabel.setText("");
+		    	accept.setDisable(true);
+		    	deny.setDisable(true);
 	        }
 	    });
 	}
@@ -682,15 +777,21 @@ public class ClientMain extends Application {
 		deny.setOnAction(new EventHandler<ActionEvent>() {
 		    @Override public void handle(ActionEvent e) {
 		    	listener.stop();
-		    	out.println("DeleteFriend");
-		    	out.flush();
-		    	out.println(requestLabel.getText().split(" ")[0]);
-		    	out.flush();
-		    	out.println("Over");
-		    	out.flush();
-		    	friends.remove(requestLabel.getText().split(" ")[0]);
-		    	try { friendConfig(); }
-		    	catch (IOException e1) { e1.printStackTrace(); }
+		    	//out.println("DeleteFriend");
+		    	//out.flush();
+		    	//System.out.println(requestLabel.getText().split(" ")[0]);
+		    	//out.println(requestLabel.getText().split(" ")[0]);
+		    	//out.flush();
+		    	//out.println("Over");
+		    	//out.flush();
+		    	requestLabel.setText("");
+		    	accept.setDisable(true);
+		    	deny.setDisable(true);
+		    	//friends.remove(requestLabel.getText().split(" ")[0]);
+	    		//selectedFriends.remove(requestLabel.getText().split(" ")[0]);
+		    	//friendBox.remove(requestLabel.getText().split(" ")[0]);
+		    	//try { friendConfig(); }
+		    	//catch (IOException e1) { e1.printStackTrace(); }
 		    	listener.play();
 	        }
 	    });
@@ -716,6 +817,36 @@ public class ClientMain extends Application {
 	}
 	
 	/**
+	 * Listen for password change
+	 */
+	private static void changePassListener() {
+		changePass.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override public void handle(ActionEvent e) {
+		    	listener.stop();
+		    	out.println("Change Password");
+		    	out.flush();
+		    	out.println(changePassField.getText());
+		    	out.flush();
+		    	changePassField.clear();
+		    	listener.play();
+	        }
+	    });
+	}
+	
+	/**
+	 * Listen for enter key pressed on change pass field
+	 */
+	private static void changePassEnterListener() {
+		changePassField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	        @Override public void handle(KeyEvent ke) {
+	            if (ke.getCode().equals(KeyCode.ENTER)) {
+	            	if (!changePassField.getText().equals("")) { changePass.fire(); }
+	            }
+	        }
+	    });
+	}
+	
+	/**
 	 * Log out
 	 */
 	private static void quitListener() {
@@ -724,7 +855,6 @@ public class ClientMain extends Application {
 		    	out.println("Quit");
 		    	out.flush();
 		    	listener.stop();
-		    	socketCreated = false;
 		    	secondaryStage.setScene(loginScene);
 	        }
 	    });
@@ -765,6 +895,8 @@ public class ClientMain extends Application {
 			    	out.flush();
 			    	friends.add(command);
 		    		requestLabel.setText(command + " has added you!");
+		    		accept.setDisable(false);
+		    		deny.setDisable(false);
 					command = in.readLine();
 					friendConfig();
 	    		}

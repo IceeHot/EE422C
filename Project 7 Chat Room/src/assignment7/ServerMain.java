@@ -2,7 +2,18 @@ package assignment7;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
+/* 
+ * Chat Room ServerMain.java
+ * EE422C Project 7 submission by
+ * Brent Atchison
+ * bma862
+ * 16455
+ * Dhruv Mathew
+ * dkm989
+ * 16455
+ * Slip days used: <1>
+ * Fall 2016
+ */
 
 public class ServerMain {
 	//static int PortNo = 5555;
@@ -54,9 +65,21 @@ public class ServerMain {
 	
 	
 	public static void CreateFileStructure() throws Exception{
+		String nameJAR = new java.io.File(ServerMain.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
+		nameJAR=URLDecoder.decode(nameJAR,"UTF-8");
 		
-		 File registry = new File(ServerMain.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-		   Data = new File(registry.getAbsolutePath()+java.io.File.separator+"information");
+		 String registry = ServerMain.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		 registry=URLDecoder.decode(registry,"UTF-8");
+		 registry=registry.substring(0,registry.length()-nameJAR.length());
+		 
+	//	URL url = ServerMain.class.getProtectionDomain().getCodeSource().getLocation();
+		//String jarPath = URLDecoder.decode(url.getFile(),"UTF-8");
+		//String parentPath=new File(jarPath).getParentFile().getPath();
+		//String fileSeparator =System.getProperty("file.separator");
+		//String newDir = parentPath + fileSeparator + "newDir2" + fileSeparator;
+		//File registry =new File (newDir);
+		
+		   Data = new File(registry+"information");
 		    boolean exists = Data.exists();
 		    if(!exists){
 		    	Data.mkdir();
@@ -104,7 +127,7 @@ public class ServerMain {
 			
 			public void run(){ 
 				boolean incomplete = true ;
-				while (incomplete){
+				while (incomplete && !(thissocket.isClosed())){
 				
 				String action=null;
 				try {
@@ -216,6 +239,9 @@ public class ServerMain {
 					System.out.println("should switch");
 					switch (command){
 					case "Quit":   File popfriends = new File(Data.getAbsolutePath()+java.io.File.separator+username+".txt");
+														if(!popfriends.exists()){
+															popfriends.createNewFile();
+														}
 							                        PrintStream pr = new PrintStream(popfriends);
 							                        if(!friendlist.isEmpty()){
 													for (String jh: friendlist){
@@ -307,6 +333,32 @@ public class ServerMain {
 					
 						
 						                       break; 
+					case  "Change Password":    String newpassword = reader.readLine();
+					File changepword = new File(Data.getAbsolutePath()+java.io.File.separator+"userdata.txt");
+					if (!changepword.exists()){
+						changepword.createNewFile();
+						}
+					ArrayList<String>up = new ArrayList<String>();
+						Scanner sca = new Scanner(changepword);
+						while(sca.hasNextLine()){
+							String temporary = sca.nextLine();
+							up.add(temporary);
+							if(temporary.equals(username)){
+								
+								sca.nextLine();
+								up.add(newpassword);
+								
+							}
+							else{
+							up.add(sca.nextLine());}
+						}
+						PrintWriter pra = new PrintWriter(changepword);
+						for (String z: up){
+							pra.println(z);
+						}
+						pra.close();
+						usernamepassword.put(username, newpassword);
+						break;
 					
 					case "FriendList":       if(!friendlist.isEmpty()){  for (String jk: friendlist ){
 												writer.println(jk);
@@ -315,7 +367,10 @@ public class ServerMain {
 												}}
 																					
 													 File readfriend = new File(Data.getAbsolutePath()+java.io.File.separator+username+".txt");
-								                     Scanner sc= new Scanner(readfriend);
+								                    if (!readfriend.exists()){
+								                    	readfriend.createNewFile();
+								                    }
+													 Scanner sc= new Scanner(readfriend);
 								                     while (sc.hasNextLine()){
 								                    	 String j =sc.nextLine();
 								                    	 System.out.println(j);
